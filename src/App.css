@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "HiraMaruPro";
+  src: url(fonts/hiramarupro-w4-opentype.otf)
+}
+
+.App {
+  text-align: -webkit-center;
+  background-image: linear-gradient(#079fef, #0275b3);
+  width: 345px;
+  height: 625px;
+  color: white;
+  font-family: HiraMaruPro;
+  font-size: 16px;
+  font-weight: W4;
+  line-height: 23px;
+}
+
+.App-logo {
+  padding-top: 23px;
+  width: 105px;
+  height: 130px;
+}
+
+.App-link {
+  font-size: 14px;
+}
+
+.App-title {
+  font-size: 24px;
+}
+
+.App-center {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+a, a:visited, a:hover, a:active {
+  color: white !important;
+}
+
+::-webkit-input-placeholder {
+  text-align: center;
+  color: white !important;
+}
+
+.ui.form input:focus, .ui.form input {
+  color: white !important;
+}
+
+.ui.input>input {
+  text-align: -webkit-center !important;
+}
+
+input::selection, textarea::selection {
+  color: white !important;
+}
