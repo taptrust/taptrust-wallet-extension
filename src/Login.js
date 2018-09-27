@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { Form, Button, Input, Message, Divider, Container } from 'semantic-ui-react'
 import logo from './logo.png';
-import { withRouter } from 'react-router-dom'; 
+import { Redirect/*, withRouter */} from 'react-router-dom'; 
 
 class App extends Component {
 
@@ -22,7 +22,8 @@ class App extends Component {
       this.setState({ loading: true, errorMessage: '' });
 
       try {
-        this.props.history.push('/home');
+        //this.props.history.push('/home');
+        this.setState({ redirect: true})
       } catch (err) {
         this.setState({ errorMessage: err.message });
       }
@@ -31,6 +32,12 @@ class App extends Component {
   };
 
   render() {
+    const { redirect } = this.state;
+
+     if (redirect) {
+       return <Redirect to='/home'/>;
+     }
+
     return (
         <div className="App">
           <header>
@@ -72,4 +79,4 @@ class App extends Component {
   }
 }
 
-export default withRouter(App);
+export default App;//withRouter(App);

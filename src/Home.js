@@ -18,7 +18,7 @@ class Home extends Component {
 
         <p className="App-center">You're now ready to send a transaction. Whenever you are using a dApp that is requesting a transaction, the dApp's request will be forwarded to the TapTrust Wallet mobile app for you approval.</p>
         <p className="App-link"><u><a href="http://localhost:7080/" target="_blank" rel="noopener noreferrer">Learn more</a></u></p>
-        <Button circular><Link to='/'>Log Out</Link></Button>
+        <Button circular><Link to='/login'>Log Out</Link></Button>
       </div>
     );
   }
