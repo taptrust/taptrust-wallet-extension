@@ -1,8 +1,10 @@
+/*global chrome*/
+
 import React, { Component } from 'react';
 import './App.css';
 import { Form, Button, Input, Message, Divider, Container } from 'semantic-ui-react'
 import logo from './logo.png';
-import { Redirect/*, withRouter */} from 'react-router-dom'; 
+import { Redirect/*, withRouter */} from 'react-router-dom';
 
 class App extends Component {
 
@@ -16,6 +18,11 @@ class App extends Component {
       };
   }
 
+  sendUsernameToBackground = async () => {
+    console.log(this.state.username);
+    chrome.runtime.sendMessage(this.state.username);
+  };
+
 
   onSubmit = async (event) => {
       event.preventDefault();
@@ -23,6 +30,7 @@ class App extends Component {
 
       try {
         //this.props.history.push('/home');
+        this.sendUsernameToBackground();
         this.setState({ redirect: true})
       } catch (err) {
         this.setState({ errorMessage: err.message });
@@ -35,7 +43,7 @@ class App extends Component {
     const { redirect } = this.state;
 
      if (redirect) {
-       return <Redirect to='/home'/>;
+       return <Redirect to='/home' />;
      }
 
     return (
