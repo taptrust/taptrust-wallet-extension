@@ -1,3 +1,5 @@
+/*global chrome*/
+
 import React, { Component } from 'react';
 import './App.css';
 import { Divider, Button } from 'semantic-ui-react'
@@ -11,6 +13,17 @@ class Home extends Component {
       this.state = {
         username: ''
       };
+  }
+
+  getUsernameFromBackground = async () => {
+    let console = chrome.extension.getBackgroundPage().console;
+    chrome.runtime.sendMessage({fn: "getUserName"}, function(response){
+    console.log("Retrieveing username: ", response);
+    });
+  };
+
+  async componentDidMount() {
+    this.getUsernameFromBackground();
   }
 
 

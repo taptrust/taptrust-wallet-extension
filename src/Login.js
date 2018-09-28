@@ -19,8 +19,9 @@ class App extends Component {
   }
 
   sendUsernameToBackground = async () => {
+    let console = chrome.extension.getBackgroundPage().console;
     console.log(this.state.username);
-    chrome.runtime.sendMessage(this.state.username);
+    chrome.runtime.sendMessage({fn: "setUserName", username: this.state.username});
   };
 
 
@@ -31,7 +32,7 @@ class App extends Component {
       try {
         //this.props.history.push('/home');
         this.sendUsernameToBackground();
-        this.setState({ redirect: true})
+        this.setState({ redirect: true});
       } catch (err) {
         this.setState({ errorMessage: err.message });
       }
