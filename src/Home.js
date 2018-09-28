@@ -8,24 +8,18 @@ import { Link } from 'react-router-dom';
 
 class Home extends Component {
 
-  constructor (props) {
-      super(props)
-      this.state = {
-        username: ''
-      };
+  constructor(props) {
+    super(props);
+    this.state = {
+        username: '',
+    };
   }
-
-  getUsernameFromBackground = async () => {
-    let console = chrome.extension.getBackgroundPage().console;
-    chrome.runtime.sendMessage({fn: "getUserName"}, function(response){
-    console.log("Retrieveing username: ", response);
-    });
-  };
 
   async componentDidMount() {
-    this.getUsernameFromBackground();
+    chrome.runtime.sendMessage({fn: "getUserName"}, (response) => {
+      this.setState({ username: response})
+    });
   }
-
 
   render() {
     return (

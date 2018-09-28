@@ -19,8 +19,6 @@ class App extends Component {
   }
 
   sendUsernameToBackground = async () => {
-    let console = chrome.extension.getBackgroundPage().console;
-    console.log(this.state.username);
     chrome.runtime.sendMessage({fn: "setUserName", username: this.state.username});
   };
 
