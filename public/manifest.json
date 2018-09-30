@@ -7,10 +7,12 @@
   "permissions": [
     "activeTab",
     "storage",
-    "http://localhost/*"
+    "http://localhost/*",
+    "notifications"
   ],
   "background": {
-    "scripts": ["background/background.js"]
+    "scripts": ["background/background.js"],
+    "persistent": true
   },
 
   "browser_action": {

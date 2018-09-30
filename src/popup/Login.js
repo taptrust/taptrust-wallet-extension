@@ -1,10 +1,10 @@
-/*global chrome*/
-
 import React, { Component } from 'react';
-import './App.css';
+import '../static/css/App.css';
 import { Form, Button, Input, Message, Divider, Container } from 'semantic-ui-react'
-import logo from './logo.png';
+import logo from '../static/img/logo.png';
 import { Redirect/*, withRouter */} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { updateUser } from '../actions/username-actions';
 
 class App extends Component {
 
@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   sendUsernameToBackground = async () => {
-    chrome.runtime.sendMessage({fn: "setUserName", username: this.state.username});
+    /*chrome.storage.local.set({'username': this.state.username});*/
   };
 
 
@@ -36,9 +36,10 @@ class App extends Component {
       }
 
       this.setState({ loading: false });
-  };
+  }; 
 
   render() {
+    console.log(this.props)
     const { redirect } = this.state;
 
      if (redirect) {
@@ -68,7 +69,7 @@ class App extends Component {
                   <Input  placeholder='Username'
                           transparent
                           focus
-                          fluid='true'
+                          fluid
                           value={this.state.username}
                           onChange={event => this.setState({username: event.target.value})}
                   />
@@ -86,4 +87,10 @@ class App extends Component {
   }
 }
 
-export default App;//withRouter(App);
+const mapStateToProps = (state, props) => {
+  return {
+    username: state.username
+  }
+}
+
+export default connect(mapStateToProps)(App);//withRouter(App);
