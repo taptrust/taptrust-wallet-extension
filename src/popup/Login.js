@@ -1,10 +1,10 @@
+/* globals chrome */
+
 import React, { Component } from 'react';
 import '../static/css/App.css';
 import { Form, Button, Input, Message, Divider, Container } from 'semantic-ui-react'
 import logo from '../static/img/logo.png';
 import { Redirect/*, withRouter */} from 'react-router-dom';
-import { connect } from 'react-redux';
-import { updateUser } from '../actions/username-actions';
 
 class App extends Component {
 
@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   sendUsernameToBackground = async () => {
-    /*chrome.storage.local.set({'username': this.state.username});*/
+    chrome.storage.local.set({'username': this.state.username});
   };
 
 
@@ -87,10 +87,4 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    username: state.username
-  }
-}
-
-export default connect(mapStateToProps)(App);//withRouter(App);
+export default (App);//withRouter(App);

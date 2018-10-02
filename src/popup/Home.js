@@ -1,3 +1,5 @@
+/* globals chrome */
+
 import React, { Component } from 'react';
 import '../static/css/App.css';
 import { Divider, Button, Dropdown } from 'semantic-ui-react'
@@ -15,16 +17,16 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    /*chrome.storage.local.get('username', (response) => {
+    chrome.storage.local.get('username', (response) => {
       this.setState({ username: response['username']});
-    });*/
-    //chrome.browserAction.setPopup();
+    });
+    chrome.browserAction.setPopup();
   }
 
 
   handleChange = (e, { value }) => {
     this.setState({ network: value }); // Setting previous value fix this
-    /*chrome.storage.local.set({'network': value});*/
+    chrome.storage.local.set({'network': value});
   }
 
   render() {
