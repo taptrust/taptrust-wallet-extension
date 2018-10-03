@@ -5,7 +5,9 @@ const apiHome = 'http://localhost:7080'
 
 export async function APICall(url, params) {
 	try {
-		const response = axios.get(apiHome + url, {params: params})
+		// TODO change to POST 
+		endpoint = apiHome + url
+		const response = axios.get(endpoint, {params: params})
   		return response
   	} 	catch (error) {
   			return error

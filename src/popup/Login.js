@@ -26,13 +26,12 @@ class App extends Component {
   // TODO change the parameters and URL and message
   async sendUsernameToBackground() {
     const params = {
-        username: this.state.username,
-        pubkey: '0xaD678Dd96dF2315176D76f46bf776250692a6da0'
+        username: this.state.username
     }
-    const url = '/api/1/login'
+    const url = '/api/1/pair'
     const response = await APICall(url, params);
     chrome.storage.sync.set({'username': this.state.username});
-  };
+  }
 
 
   onSubmit = async (event) => {
