@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import '../static/css/App.css';
 import { Form, Button, Input, Message, Divider, Container } from 'semantic-ui-react'
 import logo from '../static/img/logo.png';
-import { Redirect/*, withRouter */} from 'react-router-dom';
+import { Redirect} from 'react-router-dom';
+import { APICall } from './ajax';
 
 class App extends Component {
 
@@ -18,7 +19,18 @@ class App extends Component {
       };
   }
 
-  sendUsernameToBackground = async () => {
+  handleDismiss = () => {
+    this.setState({ errorMessage: '' })
+  }
+
+  async sendUsernameToBackground() {
+    const params = {
+        username: this.state.username,
+        pubkey: '0xaD678Dd96dF2315176D76f46bf776250692a6da0'
+    }
+    const url = '/api/1/login'
+    const response = await APICall(url, params);
+    console.log(response);
     chrome.storage.sync.set({'username': this.state.username});
   };
 
@@ -28,8 +40,7 @@ class App extends Component {
       this.setState({ loading: true, errorMessage: '' });
 
       try {
-        //this.props.history.push('/home');
-        this.sendUsernameToBackground();
+        await this.sendUsernameToBackground();
         this.setState({ redirect: true});
       } catch (err) {
         this.setState({ errorMessage: err.message });
@@ -63,22 +74,32 @@ class App extends Component {
 
           <Container textAlign='center'>
             <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-                <Form.Field required >
-                  <Divider hidden />
+                <Divider hidden />
+                <Form.Field>
                   <Input  placeholder='Username'
                           transparent
                           focus
-                          fluid
+                          required
                           value={this.state.username}
                           onChange={event => this.setState({username: event.target.value})}
                   />
-                  <Divider fitted className='white' />
-                  <Divider hidden />
-                  <Message error 
-                           content={this.state.errorMessage} 
-                  />
-                  <Button loading={this.state.loading} content='Request Authentication' circular />
+                <Divider fitted className='grey' />
                 </Form.Field>
+                <div>
+                {
+                  this.state.errorMessage ?
+                  <div>
+                    <Message  error
+                              size='mini'
+                              compact
+                              onDismiss={this.handleDismiss}
+                              content={this.state.errorMessage}
+                    />
+                    <Divider fitted hidden />
+                  </div>  : null
+                }
+                </div>
+                <Button loading={this.state.loading} content='Request Authentication' circular />
             </Form>
           </Container>
         </div>
@@ -86,4 +107,4 @@ class App extends Component {
   }
 }
 
-export default (App);//withRouter(App);
+export default (App);
