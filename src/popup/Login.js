@@ -23,6 +23,7 @@ class App extends Component {
     this.setState({ errorMessage: '' })
   }
 
+  // TODO change the parameters and URL and message
   async sendUsernameToBackground() {
     const params = {
         username: this.state.username,
@@ -30,7 +31,6 @@ class App extends Component {
     }
     const url = '/api/1/login'
     const response = await APICall(url, params);
-    console.log(response);
     chrome.storage.sync.set({'username': this.state.username});
   };
 
@@ -43,7 +43,7 @@ class App extends Component {
         await this.sendUsernameToBackground();
         this.setState({ redirect: true});
       } catch (err) {
-        this.setState({ errorMessage: err.message });
+        this.setState({ errorMessage: "Username does not exist" });// Fix error message
       }
 
       this.setState({ loading: false });
