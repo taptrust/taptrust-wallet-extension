@@ -1,7 +1,7 @@
 # taptrust-wallet-extension
 TapTrust Wallet Browser Extension 
 
-###For development
+### For development
 
 * Contains the Login and Home screen
 * Currently API calls are made to localhost. Also the API used is /login as /pair does not exist
