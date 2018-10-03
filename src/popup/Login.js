@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   sendUsernameToBackground = async () => {
-    chrome.storage.local.set({'username': this.state.username});
+    chrome.storage.sync.set({'username': this.state.username});
   };
 
 
@@ -39,7 +39,6 @@ class App extends Component {
   }; 
 
   render() {
-    console.log(this.props)
     const { redirect } = this.state;
 
      if (redirect) {
