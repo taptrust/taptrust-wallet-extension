@@ -11,7 +11,7 @@
     "notifications"
   ],
   "background": {
-    "scripts": ["background/background.js"],
+    "scripts": ["pages/background.html"],
     "persistent": true
   },
   "content_scripts": [
@@ -21,21 +21,19 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": [
-        "content/contentscript.js"
-      ],
+      "js": ["pages/index.js"],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
 
   "browser_action": {
-    "default_popup": "index.html",
+    "default_popup": "pages/popup.html",
     "default_title": "TapTrust"
   },
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "assets/img/icon.png",
+    "48": "assets/img/icon.png",
+    "128": "assets/img/icon.png"
   }
 }

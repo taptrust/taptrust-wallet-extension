@@ -24,13 +24,13 @@ class App extends Component {
 		return (
 		  	<div>
 		    	<Routes />
-		    		<div>
-		    		{
-						(this.state.loggedInStatus) ?
-							<Home /> 
-						: <Login />
-					}
-		  			</div>
+	    		<div>
+	    		{
+					(this.state.loggedInStatus) ?
+						<Home />
+					: <Login />
+				}
+	  			</div>
   			</div>
 		);
 	}

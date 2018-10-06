@@ -1,9 +1,9 @@
 /* globals chrome */
 
 import React, { Component } from 'react';
-import '../static/css/App.css';
+import '../../assets/css/App.css';
 import { Form, Button, Input, Message, Divider, Container } from 'semantic-ui-react'
-import logo from '../static/img/logo.png';
+import logo from '../../assets/img/logo.png';
 import { Redirect} from 'react-router-dom';
 import { APICall } from './ajax';
 
@@ -29,7 +29,7 @@ class App extends Component {
         username: this.state.username
     }
     const url = '/api/1/pair'
-    const response = await APICall(url, params);
+    /*const response = */await APICall(url, params);
     chrome.storage.sync.set({'username': this.state.username});
   }
 
