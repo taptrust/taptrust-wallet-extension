@@ -1,0 +1,140 @@
+@font-face {
+  font-family: "HiraMaruPro";
+  src: url(../fonts/hiramarupro-w4-opentype.otf)
+}
+
+.App {
+  text-align: -webkit-center;
+  background-image: linear-gradient(#079fef, #0275b3);
+  width: 345px;
+  padding-bottom: 30px;
+  color: white;
+  font-family: "HiraMaruPro";
+  font-size: 16px;
+  font-weight: W4;
+  line-height: 23px;
+}
+
+.Title-Container {
+  padding-top: 50px;
+}
+
+.App-logo {
+  padding-top: 23px;
+  width: 105px;
+  height: 130px;
+}
+
+.App-link {
+  font-size: 14px;
+}
+
+.App-title {
+  font-size: 24px;
+}
+
+.App-center {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 23px;
+}
+
+.App-mid {
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 23px;
+}
+.App-bottom {
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 12px;
+  font-weight: 100;
+  line-height: 23px;
+}
+
+.Appstore-Container {
+  width: 100%;
+}
+
+.AppStore-logo {
+  padding-top: 23px;
+  width: 161.4px;
+  height: 70px;
+}
+
+.GooglePlay-logo {
+  padding-top: 23px;
+  width: 161.4px;
+  height: 80px;
+}
+
+.UserName {
+  border-bottom-style: solid;
+  border-bottom-color: aliceblue;
+  border-bottom-width: 1px;
+  font-size: 2.5em;
+  width: 80% !important;
+}
+
+.InputText::-webkit-input-placeholder {
+  font-size:  16px;
+}
+
+.PairButton {
+  color: black;
+  font-size: 18px;
+  font-weight: 200;
+}
+
+.SignContainer {
+  margin-top: 55px;
+  float: right;
+  align-items: flex-end;
+}
+
+.SignOut {
+  color: black;
+  font-size: 12px;
+  font-weight: 200;
+}
+
+.Paring-Username {
+  font-size: 20px;
+  line-height: 23px;
+  font-weight: 600;
+}
+
+.Username-link {
+  text-decoration: underline;
+}
+
+.grey {
+  /* padding-left: 100px;
+  padding-right: 58.4px; */
+  /* width: 100%; */
+  width: 250px;
+  color: aliceblue;
+}
+
+a, a:visited, a:hover, a:active {
+  color: white !important;
+}
+
+::-webkit-input-placeholder {
+  text-align: center;
+  color: white !important;
+}
+
+.ui.form input:focus, .ui.form input {
+  color: white !important;
+}
+
+.ui.input>input {
+  text-align: -webkit-center !important;
+}
+
+input::selection, textarea::selection {
+  color: white !important;
+}

@@ -10,4 +10,4 @@ TapTrust Wallet Browser Extension
 1. Fork repo and run `npm install`
 2. Run `npm run build`
 3. In Google Chrome go to `More tools -> Extensions -> Load Unpacked`
-4. The path has to be set to the `build` directory of `taptrust-wallet-extension`
+4. The path has to be set to the `dist` directory of `taptrust-wallet-extension`
