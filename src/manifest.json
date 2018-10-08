@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+
+  "name": "TapTrust Wallet",
+  "description": "Ethereum Browser Extension",
+  "version": "0.0.1",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "http://localhost/*",
+    "notifications"
+  ],
+  "background": {
+    "scripts": ["app/background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "file://*/*",
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": ["app/contentscript.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
+  "browser_action": {
+    "default_popup": "app/popup.html",
+    "default_title": "TapTrust"
+  },
+  "icons": {
+    "16": "assets/img/icon.png",
+    "48": "assets/img/icon.png",
+    "128": "assets/img/icon.png"
+  }
+}
