@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 require("babel-core/register");
 require("babel-polyfill");
 
-const PAGES_PATH = './src/pages'
+const PAGES_PATH = './src/app'
 
 function generateHtmlPlugins(items) {
   return items.map( (name) => new HtmlPlugin(
@@ -21,19 +21,19 @@ module.exports = {
   entry: {
     background: [
       'babel-polyfill',
-      `${PAGES_PATH}/background`,
+      `${PAGES_PATH}/scripts/background.js`,
     ],
     popup: [
       'babel-polyfill',
       `${PAGES_PATH}/popup`,
     ],
-    index: [
+    contentscript: [
       'babel-polyfill',
-      `${PAGES_PATH}/content`,
+      `${PAGES_PATH}/scripts/contentscript.js`,
     ]
   },
   output: {
-    path: path.resolve('dist/pages'),
+    path: path.resolve('dist/app'),
     filename: '[name].js'
   },
 
@@ -72,13 +72,12 @@ module.exports = {
         {
           from: 'src',
           to: path.resolve('dist'),
-          ignore: [ 'pages/**/*' ]
+          ignore: [ 'app/**/*' ]
         }
       ]
     ),
     ...generateHtmlPlugins(
       [
-        'background',
         'popup'
       ]
     )

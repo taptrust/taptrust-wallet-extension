@@ -11,7 +11,7 @@
     "notifications"
   ],
   "background": {
-    "scripts": ["pages/background.html"],
+    "scripts": ["app/background.js"],
     "persistent": true
   },
   "content_scripts": [
@@ -21,14 +21,14 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["pages/index.js"],
+      "js": ["app/contentscript.js"],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
 
   "browser_action": {
-    "default_popup": "pages/popup.html",
+    "default_popup": "app/popup.html",
     "default_title": "TapTrust"
   },
   "icons": {
