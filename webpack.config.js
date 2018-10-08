@@ -81,5 +81,8 @@ module.exports = {
         'popup'
       ]
     )
-  ]
+  ],
+  node: {
+    fs: 'empty'
+  }
 }
