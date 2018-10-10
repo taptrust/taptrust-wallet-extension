@@ -7,19 +7,19 @@ const PongStream = require('ping-pong-stream/pong')
 const ObjectMultiplex = require('obj-multiplex')
 const extension = require('extensionizer')
 const PortStream = require('extension-port-stream')
+const brfs = require('brfs')
 
-console.log(path.join(__dirname, '..', '..', 'dist', 'chrome', 'inpage.js')).toString());
-
-const inpageContent = fs.readFileSync(path.join(__dirname, '..', '..', 'dist', 'chrome', 'inpage.js')).toString()
+/*const inpageContent = fs.readFileSync(path.join(__dirname, '..', '..', 'dist', 'inpage.js')).toString()*/
+const inpageContentUsingBrfs = brfs(path.join(__dirname, '..', '..', 'dist', 'inpage.js'))
 const inpageSuffix = '//# sourceURL=' + extension.extension.getURL('inpage.js') + '\n'
-const inpageBundle = inpageContent + inpageSuffix
+const inpageBundle = inpageContentUsingBrfs + inpageSuffix
 
 // Eventually this streaming injection could be replaced with:
 // https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Language_Bindings/Components.utils.exportFunction
 //
 // But for now that is only Firefox
 // If we create a FireFox-only code path using that API,
-// MetaMask will be much faster loading and performant on Firefox.
+// TapTrust will be much faster loading and performant on Firefox.
 
 if (shouldInjectWeb3()) {
   setupInjection()
@@ -39,7 +39,7 @@ function setupInjection () {
     // append as first child
     container.insertBefore(scriptTag, container.children[0])
   } catch (e) {
-    console.error('Metamask injection failed.', e)
+    console.error('TapTrust injection failed.', e)
   }
 }
 
@@ -61,7 +61,7 @@ function setupStreams () {
     pageStream,
     pluginStream,
     pageStream,
-    (err) => logStreamDisconnectWarning('MetaMask Contentscript Forwarding', err)
+    (err) => logStreamDisconnectWarning('TapTrust Contentscript Forwarding', err)
   )
 
   // setup local multistream channels
@@ -72,13 +72,13 @@ function setupStreams () {
     mux,
     pageStream,
     mux,
-    (err) => logStreamDisconnectWarning('MetaMask Inpage', err)
+    (err) => logStreamDisconnectWarning('TapTrust Inpage', err)
   )
   pump(
     mux,
     pluginStream,
     mux,
-    (err) => logStreamDisconnectWarning('MetaMask Background', err)
+    (err) => logStreamDisconnectWarning('TapTrust Background', err)
   )
 
   // connect ping stream
@@ -87,7 +87,7 @@ function setupStreams () {
     mux,
     pongStream,
     mux,
-    (err) => logStreamDisconnectWarning('MetaMask PingPongStream', err)
+    (err) => logStreamDisconnectWarning('TapTrust PingPongStream', err)
   )
 
   // connect phishing warning stream
@@ -107,7 +107,7 @@ function setupStreams () {
  * @param {Error} err Stream connection error
  */
 function logStreamDisconnectWarning (remoteLabel, err) {
-  let warningMsg = `MetamaskContentscript - lost connection to ${remoteLabel}`
+  let warningMsg = `TapTrustContentscript - lost connection to ${remoteLabel}`
   if (err) warningMsg += '\n' + err.stack
   console.warn(warningMsg)
 }
@@ -200,7 +200,7 @@ function blacklistedDomainCheck () {
  * Redirects the current page to a phishing information page
  */
 function redirectToPhishingWarning () {
-  console.log('MetaMask - routing to Phishing Warning component')
+  console.log('TapTrust - routing to Phishing Warning component')
   const extensionURL = extension.runtime.getURL('phishing.html')
   window.location.href = `${extensionURL}#${querystring.stringify({
     hostname: window.location.hostname,
