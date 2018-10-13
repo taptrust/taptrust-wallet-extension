@@ -35,5 +35,11 @@
     "16": "assets/img/icon.png",
     "48": "assets/img/icon.png",
     "128": "assets/img/icon.png"
+  },
+  "externally_connectable": {
+    "matches": [
+      "file:///home/sushant/Sushant/Jobs/TapTrust/taptrust/code/taptrust-wallet-extension/test/index.html"
+    ],
+    "ids": ["*"]
   }
 }
