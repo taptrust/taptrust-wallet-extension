@@ -25,7 +25,7 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    chrome.storage.sync.get('username', (response) => {
+    chrome.storage.sync.get(['username'], (response) => {
       this.setState({ username: response['username']});
     });
 

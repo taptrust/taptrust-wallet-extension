@@ -7,6 +7,7 @@
   "permissions": [
     "activeTab",
     "storage",
+    "tabs",
     "http://localhost/*",
     "notifications"
   ],
@@ -38,8 +39,11 @@
   },
   "externally_connectable": {
     "matches": [
-      "file:///home/sushant/Sushant/Jobs/TapTrust/taptrust/code/taptrust-wallet-extension/test/index.html"
+      "https://taptrust.com/"
     ],
     "ids": ["*"]
-  }
+  },
+  "web_accessible_resources": [
+    "assets/img/icon.png"
+  ]
 }

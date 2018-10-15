@@ -15,7 +15,7 @@ class App extends Component {
   	}
 
 	async componentDidMount() {
-		chrome.storage.sync.get('username', (response) => {
+		chrome.storage.sync.get(['username'], (response) => {
 			response['username'] ? this.setState({loggedInStatus: true}) : this.setState({loggedInStatus: false});
     	});
 	}

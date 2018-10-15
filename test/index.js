@@ -6,6 +6,7 @@ function submit() {
     const gasPrice = document.getElementById('gasPrice').value;
     const data = document.getElementById('data').value;
     const nonce = document.getElementById('nonce').value;
+    const url = window.location.href 
     window.postMessage({ type: "SENDTRANSACTION", 
                          fromAddress: fromAddress,
                          toAddress: toAddress,
@@ -13,5 +14,6 @@ function submit() {
                          gas: gas,
                          gasPrice: gasPrice,
                          data: data,
-                         nonce: nonce }, "*");
+                         nonce: nonce,
+                         url: url }, "*");
 };
