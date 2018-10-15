@@ -6,14 +6,19 @@ function submit() {
     const gasPrice = document.getElementById('gasPrice').value;
     const data = document.getElementById('data').value;
     const nonce = document.getElementById('nonce').value;
-    const url = window.location.href 
-    window.postMessage({ type: "SENDTRANSACTION", 
-                         fromAddress: fromAddress,
-                         toAddress: toAddress,
-                         valueOfEth: valueOfEth,
-                         gas: gas,
-                         gasPrice: gasPrice,
-                         data: data,
-                         nonce: nonce,
-                         url: url }, "*");
+    const url = window.location.href
+
+    params = {
+        "fromAddress": fromAddress,
+        "toAddress": toAddress,
+        "valueOfEth": valueOfEth,
+        "gas": gas,
+        "gasPrice": gasPrice,
+        "data": data,
+        "nonce": nonce,
+        "url": url,
+    }
+
+    tapTrust.sendTranscation(params);
+
 };
