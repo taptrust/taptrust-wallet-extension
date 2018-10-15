@@ -25,21 +25,36 @@ chrome.runtime.onMessage.addListener(
 				const url = '/api/1/pair';
 				APICall(url, params)
 				.then(function(response){
+					let message = '';
 					if(response.status == 200) {
-						const notificationParams = {
+						message = "A transaction has been sent to the TapTrust Wallet Mobile App."
+					}
+					else {
+						message = "Transaction could not be sent to the TapTrust Wallet Mobile App."
+					}
+
+					const notificationParams = {
 			          		type: "basic",
 			          		iconUrl: chrome.runtime.getURL("../assets/img/icon48.png"),
 			          		title: "TapTrust Wallet",
-			          		message: "A transaction has been sent to the TapTrust Wallet Mobile App.",
+			          		message: message,
 			          		buttons: [{ title: 'Dismiss' }],
 			          		requireInteraction: true
 	        			}
-		        		chrome.notifications.create('transaction', notificationParams);
-      					sendResponse({response: "Sent the transaction data to server"});
-					}
+	        		chrome.notifications.create('transaction', notificationParams);
+  					sendResponse({response: "Sent the transaction data to server"});
 				})
 				.catch(function(error){
-					console.log(error);
+					const notificationParams = {
+			          		type: "basic",
+			          		iconUrl: chrome.runtime.getURL("../assets/img/icon48.png"),
+			          		title: "TapTrust Wallet",
+			          		message: "Transaction could not be sent to the TapTrust Wallet Mobile App.",
+			          		buttons: [{ title: 'Dismiss' }],
+			          		requireInteraction: true
+        			}
+	        		chrome.notifications.create('transaction', notificationParams);
+  					sendResponse({response: "Failure in sending transaction data to server"});
 				})
 					
 			})
