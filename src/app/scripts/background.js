@@ -7,22 +7,24 @@ chrome.runtime.onMessage.addListener(
 		if (request.data.type == "SENDTRANSACTION") {
 			chrome.storage.sync.get(['username'], function (response) {
 				username = response.username
-				/*const params = {
+				const params = {
 	    			username: username,
-					fromAddress: request.data.fromAddress,
-					toAddress: request.data.toAddress,
-					valueOfEth: request.data.valueOfEth,
-					gas: request.data.gas,
-					gasPrice: request.data.gasPrice,
-					data: request.data.data,
-					nonce: request.data.nonce,
-	    			appUrl: request.data.url
+	    			pubkey: 0,
+	    			app: request.data.url,
+	    			request: {
+	    				type: "transaction",
+						value: request.data.valueOfEth,
+						recipient: request.data.toAddress,
+						fromAddress: request.data.fromAddress,
+						gas: request.data.gas,
+						gasPrice: request.data.gasPrice,
+						data: request.data.data,
+						nonce: request.data.nonce	    				
+	    			}	    			
 				}
 
-				const url = '/api/1/auth/request';*/
+				const url = '/api/1/auth/request';
 
-				const params = { username: username }
-				const url = '/api/1/pair';
 				APICall(url, params)
 				.then(function(response){
 					let message = '';

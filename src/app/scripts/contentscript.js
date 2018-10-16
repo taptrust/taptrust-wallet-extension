@@ -8,7 +8,6 @@ window.addEventListener("message", function(event) {
     return;
 
   if (event.data.type && (event.data.type == "SENDTRANSACTION")) {
-      console.log("Content script received data. Example from address: " + event.data.fromAddress);
       chrome.runtime.sendMessage({data: event.data}, (response) => {
         console.log(response);
       });
