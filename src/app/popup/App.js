@@ -15,7 +15,7 @@ class App extends Component {
   	}
 
 	async componentDidMount() {
-		chrome.storage.sync.get('username', (response) => {
+		chrome.storage.sync.get(['username'], (response) => {
 			response['username'] ? this.setState({loggedInStatus: true}) : this.setState({loggedInStatus: false});
     	});
 	}
@@ -24,13 +24,13 @@ class App extends Component {
 		return (
 		  	<div>
 		    	<Routes />
-		    		<div>
-		    		{
-						(this.state.loggedInStatus) ?
-							<Home /> 
-						: <Login />
-					}
-		  			</div>
+	    		<div>
+	    		{
+					(this.state.loggedInStatus) ?
+						<Home />
+					: <Login />
+				}
+	  			</div>
   			</div>
 		);
 	}

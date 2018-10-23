@@ -7,37 +7,43 @@
   "permissions": [
     "activeTab",
     "storage",
-    "unlimitedStorage",
-    "webRequest",
+    "tabs",
     "http://localhost/*",
     "notifications"
   ],
   "background": {
-    "scripts": ["background/background.js"],
+    "scripts": ["app/background.js"],
     "persistent": true
   },
- "content_scripts": [
+  "content_scripts": [
     {
       "matches": [
         "file://*/*",
         "http://*/*",
         "https://*/*"
       ],
-      "js": [
-        "content/contentScript.js"
-      ],
+      "js": ["app/contentscript.js"],
       "run_at": "document_start",
       "all_frames": true
     }
   ],
 
   "browser_action": {
-    "default_popup": "index.html",
+    "default_popup": "app/popup.html",
     "default_title": "TapTrust"
   },
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
-  }
+    "16": "assets/img/icon.png",
+    "48": "assets/img/icon.png",
+    "128": "assets/img/icon.png"
+  },
+  "externally_connectable": {
+    "matches": [
+      "https://taptrust.com/"
+    ],
+    "ids": ["*"]
+  },
+  "web_accessible_resources": [
+    "assets/img/icon.png"
+  ]
 }

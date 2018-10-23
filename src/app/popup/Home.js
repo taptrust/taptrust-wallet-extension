@@ -1,9 +1,9 @@
 /* globals chrome */
 
 import React, { Component } from 'react';
-import '../static/css/App.css';
+import '../../assets/css/App.css';
 import { Divider, Button, Dropdown } from 'semantic-ui-react'
-import logo from '../static/img/logo.png';
+import logo from '../../assets/img/logo.png';
 import { Redirect } from 'react-router-dom'; 
 
 class Home extends Component {
@@ -25,7 +25,7 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    chrome.storage.sync.get('username', (response) => {
+    chrome.storage.sync.get(['username'], (response) => {
       this.setState({ username: response['username']});
     });
 
