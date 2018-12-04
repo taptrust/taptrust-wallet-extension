@@ -7,12 +7,15 @@
   text-align: -webkit-center;
   background-image: linear-gradient(#079fef, #0275b3);
   width: 345px;
-  height: 600px;
   color: white;
   font-family: HiraMaruPro;
   font-size: 16px;
   font-weight: W4;
   line-height: 23px;
+}
+
+.Title-Container {
+  padding-top: 50px;
 }
 
 .App-logo {
@@ -32,6 +35,52 @@
 .App-center {
   padding-left: 10px;
   padding-right: 10px;
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 23px;
+}
+
+.App-mid {
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 23px;
+}
+.App-bottom {
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 12px;
+  font-weight: 100;
+  line-height: 23px;
+}
+
+.Appstore-Container {
+  width: 100%;
+}
+
+.AppStore-logo {
+  padding-top: 23px;
+  width: 161.4px;
+  height: 70px;
+}
+
+.GooglePlay-logo {
+  padding-top: 23px;
+  width: 161.4px;
+  height: 80px;
+}
+
+.PairButton {
+  color: black;
+  font-size: 18px;
+  font-weight: 200;
+}
+
+.grey {
+  /* padding-left: 100px;
+  padding-right: 58.4px; */
+  /* width: 100%; */
+  width: 250px;
+  color: aliceblue;
 }
 
 a, a:visited, a:hover, a:active {
