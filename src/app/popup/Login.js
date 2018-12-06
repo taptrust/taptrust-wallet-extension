@@ -48,6 +48,9 @@ class App extends Component {
 	}
 	
 	onSubmit = async event => {
+        if (this.state.username === '') {
+            alert('A valid username is required');
+        }
 		event.preventDefault();
         this.setState({ loading: true, errorMessage: "" });
         try {
@@ -100,7 +103,7 @@ class App extends Component {
                 <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
                 <Divider hidden />
                 <Form.Field>
-                    <Input
+                    {/* <Input
                         placeholder="Username"
                         transparent
                         focus
@@ -109,7 +112,18 @@ class App extends Component {
                         onChange={event =>
                             this.setState({ username: event.target.value })
                         }
-                    />
+                    /> */}
+                    <div class='ui transparent input focus required UserName'>
+                        <input
+                            type='text'
+                            placeholder='Username'
+                            value={this.state.username}
+                            onChange={event =>
+                                this.setState({ username: event.target.value })
+                            }
+                            class="InputText"
+                        />
+                    </div>
                 </Form.Field>
                 <p className="App-bottom">
                     TapTrust will never request your Wallet password anywhere outside of the TapTrust Wallet mobile app.
@@ -130,7 +144,6 @@ class App extends Component {
                 </div>
                 <Button
                     loading={this.state.loading}
-                    // content="Pair with TapTrust Wallet"
                     circular
                     size="large"
                 >

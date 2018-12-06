@@ -7,8 +7,9 @@
   text-align: -webkit-center;
   background-image: linear-gradient(#079fef, #0275b3);
   width: 345px;
+  padding-bottom: 30px;
   color: white;
-  font-family: HiraMaruPro;
+  font-family: "HiraMaruPro";
   font-size: 16px;
   font-weight: W4;
   line-height: 23px;
@@ -67,6 +68,18 @@
   padding-top: 23px;
   width: 161.4px;
   height: 80px;
+}
+
+.UserName {
+  border-bottom-style: solid;
+  border-bottom-color: aliceblue;
+  border-bottom-width: 1px;
+  font-size: 2.5em;
+  width: 80% !important;
+}
+
+.InputText::-webkit-input-placeholder {
+  font-size:  16px;
 }
 
 .PairButton {
