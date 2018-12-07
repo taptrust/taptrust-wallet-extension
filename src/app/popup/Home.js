@@ -5,6 +5,7 @@ import '../../assets/css/App.css';
 import { Divider, Button, Dropdown } from 'semantic-ui-react'
 import logo from '../../assets/img/logo.png';
 import { Redirect } from 'react-router-dom'; 
+import { emojiHash } from '../libraries/emoji'
 
 class Home extends Component {
 
@@ -13,7 +14,8 @@ class Home extends Component {
     this.state = {
         username: '',
         network: 1,
-        redirect: false
+        redirect: false,
+        emojiString: ''
     };
     this.updateUsernameNetwork = this.updateUsernameNetwork.bind(this);    
   }
@@ -25,8 +27,13 @@ class Home extends Component {
   }
 
   async componentDidMount() {
+    let timeStamp = this.getTimeStamp();
     chrome.storage.sync.get(['username'], (response) => {
-      this.setState({ username: response['username']});
+      const emoji = emojiHash(response['username'] + '-' + timeStamp);
+      this.setState({
+        username: response['username'],
+        emojiString: emoji
+      });
     });
 
     chrome.storage.sync.get('network', (response) => {
@@ -34,7 +41,11 @@ class Home extends Component {
     });
   }
 
-
+  getTimeStamp = () => {
+		let date = Math.floor(new Date() / 1000);
+		return date;
+  }
+  
   handleChange = (e, { value }) => {
     this.setState({ network: value }); // Setting previous value fix this
     chrome.storage.sync.set({'network': value});
@@ -58,18 +69,26 @@ class Home extends Component {
     return (
       <div className="App">
         <header>
-          <img src={logo} className="App-logo" alt="logo" />
+          <div className="Title-Container">
+            <p className="App-title">TapTrust Wallet</p>
+          </div>
           <Divider hidden />
-          <p className="App-title">TapTrust Wallet</p>
-          <h2>{this.state.username}.taptrust.eth</h2>
+          <p className="App-center">
+            Requesting approval for:
+          </p>
+          <p className="Paring-Username">{this.state.username}.taptrust.eth</p>
+          <p className="Paring-Username">{this.state.emojiString}</p>
           <Divider hidden />
         </header>
 
-        <p className="App-center">You're now ready to send a transaction. 
-        Whenever you are using a dApp that is requesting a transaction, 
-        the dApp's request will be forwarded to the TapTrust Wallet mobile 
-        app for you approval.</p>
-        <p className="App-link"><u><a href="http://localhost:7080/" 
+        <p className="App-center">To approve this pairing request,
+        sign in as <a className="Username-link" href="http://localhost:7080/"
+                                      target="_blank" 
+                                      >username</a> from the
+        TapTrust Wallet mobile app and
+        verify the emoji sequence shown in
+        the app matches the one above.</p>
+        {/* <p className="App-link"><u><a href="http://localhost:7080/" 
                                       target="_blank" 
                                       rel="noopener noreferrer">Learn more</a></u></p>
         <span>
@@ -80,9 +99,14 @@ class Home extends Component {
               options={options}
               value={this.state.network}
             />          
-        </span>
+        </span> */}
         <Divider hidden />
-        <Button circular content="Log Out" onClick={this.updateUsernameNetwork}/>
+        <Button
+          circular
+          onClick={this.updateUsernameNetwork}
+        >
+          <p className="PairButton">Cancel Request</p>
+        </Button>
       </div>
     );
   }

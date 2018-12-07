@@ -88,6 +88,16 @@
   font-weight: 200;
 }
 
+.Paring-Username {
+  font-size: 20px;
+  line-height: 23px;
+  font-weight: 600;
+}
+
+.Username-link {
+  text-decoration: underline;
+}
+
 .grey {
   /* padding-left: 100px;
   padding-right: 58.4px; */

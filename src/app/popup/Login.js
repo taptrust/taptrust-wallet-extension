@@ -50,17 +50,18 @@ class App extends Component {
 	onSubmit = async event => {
         if (this.state.username === '') {
             alert('A valid username is required');
+        } else {
+            event.preventDefault();
+            this.setState({ loading: true, errorMessage: "" });
+            try {
+                await this.sendUsernameToBackground();
+                this.setState({ redirect: true });
+            } catch (err) {
+                this.setState({ errorMessage: "Username does not exist" }); // Fix error message
+            }
+            
+            this.setState({ loading: false });
         }
-		event.preventDefault();
-        this.setState({ loading: true, errorMessage: "" });
-        try {
-            await this.sendUsernameToBackground();
-            this.setState({ redirect: true });
-        } catch (err) {
-            this.setState({ errorMessage: "Username does not exist" }); // Fix error message
-        }
-        
-        this.setState({ loading: false });
     };
 
     render() {
