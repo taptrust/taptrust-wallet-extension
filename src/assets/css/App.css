@@ -88,6 +88,18 @@
   font-weight: 200;
 }
 
+.SignContainer {
+  margin-top: 55px;
+  float: right;
+  align-items: flex-end;
+}
+
+.SignOut {
+  color: black;
+  font-size: 12px;
+  font-weight: 200;
+}
+
 .Paring-Username {
   font-size: 20px;
   line-height: 23px;

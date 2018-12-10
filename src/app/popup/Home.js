@@ -5,7 +5,9 @@ import '../../assets/css/App.css';
 import { Divider, Button, Dropdown } from 'semantic-ui-react'
 import logo from '../../assets/img/logo.png';
 import { Redirect } from 'react-router-dom'; 
-import { emojiHash } from '../libraries/emoji'
+import { emojiHash } from '../libraries/emoji';
+import { generateToken } from '../utils/tokenGenerator';
+import { APICall } from "./ajax";
 
 class Home extends Component {
 
@@ -15,7 +17,8 @@ class Home extends Component {
         username: '',
         network: 1,
         redirect: false,
-        emojiString: ''
+        emojiString: '',
+        approved: false,
     };
     this.updateUsernameNetwork = this.updateUsernameNetwork.bind(this);    
   }
@@ -26,14 +29,58 @@ class Home extends Component {
     this.setState({redirect: true})
   }
 
+  pairRequest = async (username, token) => {
+    const params = {
+      username: username,
+      token: token
+    };
+    const url = "/api/1/pair/request";
+    const response = await APICall(url, params);
+    // alert(response.status)
+    if (response.status === 'pending') {
+      this.intervalRequest(url, params);
+    } else {
+      // this.setState({redirect: true})
+    }
+
+    return response;
+  }
+
+  intervalRequest = async (url, params) => {
+    var timerId = setInterval( () => {
+      try { APICall(url, params)
+        .then(response => {
+          if(response.status === 'approved') {
+            // chrome.storage.sync.set({'account': {
+            //   username: response.username,
+            //   address: response.address,
+            //   balances: response.balances
+            // }})
+            alert(JSON.stringify(response, null, 4))
+          }
+          clearInterval(timerId);
+          this.setState({ approved: true })
+          alert(JSON.stringify(response, null, 4))
+        })
+        .catch(e => {
+          alert(e);
+      });} catch(e) {
+        Alert.alert(e);
+      }
+    }, 5000);
+  }
+
   async componentDidMount() {
     let timeStamp = this.getTimeStamp();
     chrome.storage.sync.get(['username'], (response) => {
-      const emoji = emojiHash(response['username'] + '-' + timeStamp);
+      const username = response['username'];
+      const emoji = emojiHash(username, timeStamp);
+      const token = generateToken(username, timeStamp);
       this.setState({
-        username: response['username'],
+        username: username,
         emojiString: emoji
       });
+      this.pairRequest(username, token);
     });
 
     chrome.storage.sync.get('network', (response) => {
@@ -52,20 +99,15 @@ class Home extends Component {
   }
 
   render() {
+    const { redirect, approved } = this.state;
 
-    const options = [
-      { key: 1, text: 'Mainnet', value: 1 },
-      { key: 2, text: 'Ropsten', value: 2 },
-      { key: 3, text: 'Kovan', value: 3 },
-      { key: 4, text: 'Rinkeby', value: 4 }
-    ]
+    if (redirect) {
+      return <Redirect to='/login' />;
+    }
 
-    const { redirect } = this.state;
-
-     if (redirect) {
-       return <Redirect to='/login' />;
-     }
-
+    if (approved) {
+      return <Redirect to='/loggedin' />;
+    }
     return (
       <div className="App">
         <header>
@@ -82,24 +124,10 @@ class Home extends Component {
         </header>
 
         <p className="App-center">To approve this pairing request,
-        sign in as <a className="Username-link" href="http://localhost:7080/"
-                                      target="_blank" 
-                                      >username</a> from the
+        sign in as <a className="Username-link" href="http://localhost:7080/" target="_blank">username</a> from the
         TapTrust Wallet mobile app and
         verify the emoji sequence shown in
         the app matches the one above.</p>
-        {/* <p className="App-link"><u><a href="http://localhost:7080/" 
-                                      target="_blank" 
-                                      rel="noopener noreferrer">Learn more</a></u></p>
-        <span>
-          Network:&nbsp;{' '}
-          <Dropdown
-              inline
-              onChange={this.handleChange.bind(this)}
-              options={options}
-              value={this.state.network}
-            />          
-        </span> */}
         <Divider hidden />
         <Button
           circular
