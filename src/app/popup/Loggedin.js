@@ -20,12 +20,13 @@ class Loggedin extends Component {
   }
 
   async componentDidMount() {
-    chrome.storage.sync.get(['username'], (response) => {
+    await chrome.storage.sync.get(['username'], (response) => {
       const username = response['username'];
       this.setState({
         username: username
       });
     });
+    setTimeout(alert(this.props.location.state.message), 1000)
   }
 
   handleTransaction = () => {
@@ -38,6 +39,7 @@ class Loggedin extends Component {
     this.setState({
       redirect: 'login'
     })
+    chrome.storage.sync.set({'account': ''});
   }
 
   render() {
@@ -54,32 +56,26 @@ class Loggedin extends Component {
     return (
       <div className="App">
         <header>
-          <Divider hidden />
+          <div className="top">
             <p className="App-bottom">
             Your TapTrust Wallet Address
             </p>
+          </div>
           <p className="Paring-Username">{this.state.username}.taptrust.eth</p>
           <Divider hidden />
         </header>
-        <Divider hidden />
         <p className="App-bottom">
             Use the TapTrust Wallet mobile app to view account balances and transaction history.
         </p>
         <div className="Appstore-Container">
-          <Button
-            circular
-            onClick={this.handleTransaction}
-          >
-            <p className="PairButton">New Transaction</p>
-          </Button>
+          <button class="circular ui button submit wd-200" onClick={this.handleTransaction}>
+            <label class="label-sub fs-18 tx-center">New Transaction</label>
+          </button>
         </div>
         <div className="SignContainer">
-          <Button
-            circular
-            onClick={this.handleSignOut}
-          >
-            <p className="SignOut">Sign Out</p>
-          </Button>
+          <button class="circular ui button smallButton ph-10" onClick={this.handleSignOut}>
+            <label class="label-sub fs-12 tx-center">Sign Out</label>
+          </button>
         </div>
       </div>
     );
