@@ -19,6 +19,10 @@
   padding-top: 50px;
 }
 
+.top {
+  padding-top: 34px;
+}
+
 .App-logo {
   padding-top: 23px;
   width: 105px;
@@ -108,6 +112,12 @@
 
 .Username-link {
   text-decoration: underline;
+}
+
+.smallButton {
+  color: black !important;
+  padding: 1px !important;
+  background-color: white !important;
 }
 
 .grey {

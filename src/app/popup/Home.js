@@ -36,9 +36,9 @@ class Home extends Component {
     };
     const url = "/api/1/pair/request";
     const response = await APICall(url, params);
-    // alert(response.status)
-    if (response.status === 'pending') {
-      this.intervalRequest(url, params);
+    // alert(JSON.stringify(response, null, 4))
+    if (response.data.status === 'pending') {
+      this.intervalRequest(username);
     } else {
       // this.setState({redirect: true})
     }
@@ -46,21 +46,27 @@ class Home extends Component {
     return response;
   }
 
-  intervalRequest = async (url, params) => {
-    var timerId = setInterval( () => {
+  intervalRequest = async (username) => {
+    const params = {
+      username: username
+    };
+    const url = "/api/1/auth/list";
+    var timerId = setInterval(() => {
       try { APICall(url, params)
         .then(response => {
-          if(response.status === 'approved') {
-            // chrome.storage.sync.set({'account': {
-            //   username: response.username,
-            //   address: response.address,
-            //   balances: response.balances
-            // }})
+          if(response.status === 200) {
+            const data = response.data.profile;
+            const balances = response.data.balances;
+            chrome.storage.sync.set({'account': {
+              username: data.username,
+              address: data.contractAddress,
+              ensAddress: data.ensAddress,
+              balances: balances
+            }});
+            clearInterval(timerId);
             alert(JSON.stringify(response, null, 4))
+            this.setState({ approved: true })
           }
-          clearInterval(timerId);
-          this.setState({ approved: true })
-          alert(JSON.stringify(response, null, 4))
         })
         .catch(e => {
           alert(e);

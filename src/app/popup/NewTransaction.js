@@ -20,10 +20,14 @@ class Newtransaction extends Component {
   }
 
   async componentDidMount() {
-    chrome.storage.sync.get(['username'], (response) => {
-      const username = response['username'];
+    chrome.storage.sync.get(['account'], (response) => {
+      alert(JSON.stringify(response['account'], null, 4))
+      const data = response['account'];
       this.setState({
-        username: username
+        username: data.username,
+        address: data.address,
+        ensAddress: data.ensAddress,
+        balances: data.balances
       });
     });
   }
@@ -40,7 +44,17 @@ class Newtransaction extends Component {
     })
   }
   
+  addressEllipsis(address){
+    var length = String(address).length;
+    var head = String(address).substring(0, 6);
+    var tail = String(address).substring(length-5, length)
+
+    return `${head}...${tail}`;
+  }
+  
   render() {
+    const { ensAddress, address } = this.state;
+
     return (
       <div className="App">
         <header>
@@ -48,33 +62,27 @@ class Newtransaction extends Component {
                 <p className="App-title">New Transaction</p>
             </div>
         </header>
-        <Divider hidden />
-        <p className="App-bottom">
-            from
-        </p>
-        <p className="Paring-Username">{this.state.username}.taptrust.eth</p>
-        <p className="App-bottom">
-            0x0eEB6…b43d
-        </p>
+        {/* <Divider hidden /> */}
+        <p className="App-bottom">from</p>
+        <p className="Paring-Username">{ensAddress}</p>
+        <p className="App-bottom">{this.addressEllipsis(address)}</p>
         <div class='UserName'/>
-        <p className="App-bottom">
-            to
-        </p>
-        <div className="Appstore-Container">
-          <Button
-            circular
-            onClick={this.handleTransaction}
-          >
-            <p className="PairButton">New Transaction</p>
-          </Button>
+        <div className="top">
+          <p className="App-bottom">to</p>
         </div>
-        <div className="SignContainer">
-          <Button
-            circular
-            onClick={this.handleSignOut}
-          >
-            <p className="SignOut">Sign Out</p>
-          </Button>
+        <div className="Appstore-Container">
+          <button class="circular ui button smallButton">
+            <p className="App-bottom">ETH Address</p>
+          </button>
+          <button class="circular ui button smallButton">
+            <p className="App-bottom">Scan QR</p>
+          </button>
+          <button class="circular ui button smallButton">
+            <p className="App-bottom">Recent</p>
+          </button>
+        </div>
+        <div className="top">
+          <div class='UserName'/>
         </div>
       </div>
     );

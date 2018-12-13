@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Login from './Login';
 import Routes from './Routes';
 import Home from './Home';
+import Loggedin from './Loggedin';
 import timestamp from 'time-stamp';
 
 class App extends Component {
@@ -22,8 +23,8 @@ class App extends Component {
 	
 	async componentDidMount() {
 		let timeStamp = this.getTimeStamp();
-		chrome.storage.sync.get(['username'], (response) => {
-			response['username'] ? this.setState({loggedInStatus: true}) : this.setState({loggedInStatus: false});
+		chrome.storage.sync.get(['account'], (response) => {
+			response['account'] ? this.setState({loggedInStatus: true}) : this.setState({loggedInStatus: false});
 		});
 
 		chrome.storage.sync.set('taptrust-wallet-token', timeStamp);
@@ -37,7 +38,7 @@ class App extends Component {
 	    		<div>
 	    		{
 					(this.state.loggedInStatus) ?
-						<Home />
+						<Loggedin/>
 					: <Login />
 				}
 	  			</div>

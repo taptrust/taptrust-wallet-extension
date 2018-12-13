@@ -38,6 +38,7 @@ class Loggedin extends Component {
     this.setState({
       redirect: 'login'
     })
+    chrome.storage.sync.set({'account': ''});
   }
 
   render() {
@@ -54,14 +55,14 @@ class Loggedin extends Component {
     return (
       <div className="App">
         <header>
-          <Divider hidden />
+          <div className="top">
             <p className="App-bottom">
             Your TapTrust Wallet Address
             </p>
+          </div>
           <p className="Paring-Username">{this.state.username}.taptrust.eth</p>
           <Divider hidden />
         </header>
-        <Divider hidden />
         <p className="App-bottom">
             Use the TapTrust Wallet mobile app to view account balances and transaction history.
         </p>
