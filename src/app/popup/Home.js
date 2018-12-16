@@ -135,12 +135,9 @@ class Home extends Component {
         verify the emoji sequence shown in
         the app matches the one above.</p>
         <Divider hidden />
-        <Button
-          circular
-          onClick={this.updateUsernameNetwork}
-        >
-          <p className="PairButton">Cancel Request</p>
-        </Button>
+        <button class="circular ui button submit cancel-request" onClick={this.updateUsernameNetwork}>
+            <label class="label-sub fs-12 tx-center">Cancel Request</label>
+        </button>
       </div>
     );
   }

@@ -143,13 +143,16 @@ class App extends Component {
                         </div>
                     ) : null}
                 </div>
-                <Button
+                <button class="circular ui button submit pair" onClick={this.onSubmit}>
+                    <label class="label-sub fs-18 tx-center">Pair with TapTrust Wallet</label>
+                </button>
+                {/* <Button
                     loading={this.state.loading}
                     circular
                     size="large"
                 >
                     <p className="PairButton">Pair with TapTrust Wallet</p>
-                </Button>
+                </Button> */}
             </Form>
             </Container>
         </div>

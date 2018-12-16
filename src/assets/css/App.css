@@ -9,7 +9,7 @@
   width: 345px;
   padding-bottom: 30px;
   color: white;
-  font-family: "HiraMaruPro";
+  font-family: "HiraMaruPro" !important;
   font-size: 16px;
   font-weight: W4;
   line-height: 23px;
@@ -98,6 +98,7 @@
 }
 
 .SignContainer {
+  margin-right: 15px;
   margin-top: 55px;
   float: right;
   align-items: flex-end;
@@ -258,6 +259,10 @@ textarea:focus, input:focus{
   font-size: 18px;
 }
 
+.fs-12 {
+  font-size: 12px;
+}
+
 .tx-center {
   width: 100%;
   text-align: center
@@ -265,4 +270,23 @@ textarea:focus, input:focus{
 
 .mt-35 {
   margin-top: 35px;
+}
+
+.pair {
+  width: 295px;
+}
+
+.cancel-request {
+  width: 130px;
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+.wd-200 {
+  width: 200px;
+}
+
+.ph-10 {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
