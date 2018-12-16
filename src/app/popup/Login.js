@@ -44,7 +44,6 @@ class App extends Component {
 		const url = "/api/1/pair";
 		/*const response = */
         const response = await APICall(url, params);
-        alert(JSON.stringify(response, null, 4));
 		chrome.storage.sync.set({ username: this.state.username });
 	}
 	
