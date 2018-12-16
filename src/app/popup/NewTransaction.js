@@ -193,7 +193,12 @@ class Newtransaction extends Component {
     }
 
     if(redirect === 'loggedin') {
-      return <Redirect to='/loggedin' />;
+      return <Redirect
+        to={{
+          pathname: '/loggedin',
+          state: {message: 'Please open the TapTrust Wallet app on your mobile device to approve this transaction'}
+        }}
+      />;
     }
 
     return (
