@@ -29,6 +29,7 @@
     "pump": "^3.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-modal": "^3.7.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "semantic-ui-css": "^2.4.0",

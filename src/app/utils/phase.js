@@ -1,0 +1,1 @@
+export const phase = "taptrust-extension-pairing-" ;

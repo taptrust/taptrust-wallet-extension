@@ -3,16 +3,30 @@
   src: url(../fonts/hiramarupro-w4-opentype.otf)
 }
 
+html{
+  height: auto;
+}
+
+
 .App {
   text-align: -webkit-center;
   background-image: linear-gradient(#079fef, #0275b3);
   width: 345px;
-  height: 600px;
+  padding-bottom: 30px;
   color: white;
-  font-family: HiraMaruPro;
+  font-family: "HiraMaruPro" !important;
   font-size: 16px;
   font-weight: W4;
   line-height: 23px;
+  display: table;
+}
+
+.Title-Container {
+  padding-top: 50px;
+}
+
+.top {
+  padding-top: 34px;
 }
 
 .App-logo {
@@ -32,6 +46,109 @@
 .App-center {
   padding-left: 10px;
   padding-right: 10px;
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 23px;
+}
+
+.App-mid {
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 23px;
+}
+.App-bottom {
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 12px;
+  font-weight: 100;
+  line-height: 23px;
+}
+
+.Appstore-Container {
+  width: 100%;
+}
+
+.AppStore-logo {
+  padding-top: 23px;
+  width: 161.4px;
+  height: 70px;
+}
+
+.GooglePlay-logo {
+  padding-top: 23px;
+  width: 161.4px;
+  height: 80px;
+}
+
+.UserName {
+  border-bottom-style: solid;
+  border-bottom-color: aliceblue;
+  border-bottom-width: 1px;
+  font-size: 2.5em;
+  width: 80% !important;
+}
+
+.ui.transparent.input>input {
+  color: white !important;
+}
+
+.InputText::-webkit-input-placeholder {
+  font-size:  16px;
+}
+
+.PairButton {
+  color: black;
+  font-size: 18px;
+  font-weight: 200;
+}
+
+.SignContainer {
+  margin-right: 15px;
+  margin-top: 55px;
+  float: right;
+  align-items: flex-end;
+}
+
+.SignOut {
+  color: black;
+  font-size: 12px;
+  font-weight: 200;
+}
+
+.Paring-Username {
+  font-size: 20px;
+  line-height: 23px;
+  font-weight: 600;
+}
+
+.Username-link {
+  text-decoration: underline;
+}
+
+.smallButton {
+  color: black !important;
+  padding: 1px !important;
+  background-color: white !important;
+}
+
+.Price {
+  border-bottom-style: solid;
+  border-bottom-color: aliceblue;
+  border-bottom-width: 1px;
+  font-size: 2.5em;
+  width: 100px !important;
+}
+
+.white {
+  color: aliceblue;
+}
+
+.grey {
+  /* padding-left: 100px;
+  padding-right: 58.4px; */
+  /* width: 100%; */
+  width: 250px;
+  color: aliceblue;
 }
 
 a, a:visited, a:hover, a:active {
@@ -53,4 +170,132 @@ a, a:visited, a:hover, a:active {
 
 input::selection, textarea::selection {
   color: white !important;
+}
+
+.container{
+  padding: 15px 20px;
+}
+.col-12{
+  float:left;
+  width :100%;
+}
+.col-6{
+  float:left;
+  width :50%;
+}
+.cur-area{
+  margin: 0 20px;
+  border-bottom: 1px solid white;
+  display: table;
+}
+
+.input-sub{
+  border: 0;
+  float: left;
+  width: 55px;
+  color: white;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: right;
+  background: transparent;
+}
+.label-sub{
+  float: left;
+  width: 50px;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: left;
+}
+textarea:focus, input:focus{
+  outline: none;
+}
+.input-sub::-webkit-input-placeholder { text-align:right; }
+
+.address-area{
+  margin: 0 20px;
+  display: table;
+}
+
+.edit-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.label-address{
+  width: 50px;
+  margin-left: 5px;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: left;
+}
+
+.edit-button {
+  margin-left: 30px !important;
+}
+.b-b{
+  border-bottom: 1px solid white;
+  margin-top: 10px;
+  font-size: 14px;
+}
+.b-b.label-sub{
+  width: auto;
+}
+.ml-5{
+  margin-left: 5px;
+}
+.ml-20{
+  margin-left:20px;
+}
+.pull-right{
+  float:right;
+}
+.mr-20{
+  margin-right:20px;
+}
+
+.submit {
+  width: 140px;
+  color: black !important;
+  /* padding: 1px !important; */
+  background-color: white !important;
+}
+
+.fs-18 {
+  font-size: 18px;
+}
+
+.fs-12 {
+  font-size: 12px;
+}
+
+.tx-center {
+  width: 100%;
+  text-align: center
+}
+
+.mt-35 {
+  margin-top: 35px;
+}
+
+.pair {
+  width: 295px;
+}
+
+.cancel-request {
+  width: 130px;
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+}
+
+.wd-200 {
+  width: 200px;
+}
+
+.ph-10 {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.ui.button label{
+  cursor: pointer;
 }
