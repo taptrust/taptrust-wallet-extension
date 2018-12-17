@@ -106,6 +106,9 @@ class Newtransaction extends Component {
 
   addressEllipsis(address){
     var length = String(address).length;
+    if (length < 8){
+      return String(address);
+    }
     var head = String(address).substring(0, 6);
     var tail = String(address).substring(length-5, length)
 
@@ -117,7 +120,7 @@ class Newtransaction extends Component {
     if(!usd) {
       return 0;
     }
-    return (value/100).toFixed(3);
+    return (value/100).toFixed(4);
   }
 
   ethToUSD = (eth) => {
@@ -159,11 +162,11 @@ class Newtransaction extends Component {
     const params = {
       username: this.state.username,
       pubkey: 0,
-      app: 'TapTrust Wallet Browser Extension',
+      app: 0,
       params: {
         type: "customTransaction",
-        value: this.state.ethAmount,
-        recipient: this.state.recipientAddress
+        value: parseInt(parseFloat(this.state.ethAmount) * 1000000000000000000),
+        to: this.state.recipientAddress
       }
     };
     const url = "/api/1/auth/request";
