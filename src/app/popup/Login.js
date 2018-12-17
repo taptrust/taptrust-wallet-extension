@@ -77,13 +77,13 @@ class App extends Component {
         return (
         <div className="App">
             <header>
-                <div className="Title-Container">
+                <div className="Title-Container" style={{paddingTop:30}}>
                     <p className="App-title">TapTrust Wallet</p>
                 </div>
                 <Divider hidden />
             </header>
 
-            <p className="App-center">
+            <p className="App-center" style={{fontSize: 15, padding: "0px 20px 0"}}>
                 First download the TapTrust Wallet 
                 mobile app and create an account.
             </p>
@@ -96,11 +96,11 @@ class App extends Component {
                 <img src={playStore} className="GooglePlay-logo" alt="logo" />
             </div>
 
-            <p className="App-mid">
+            <p className="App-mid" style={{padding: "20px 20px 0",  fontSize: 12}}>
                 Enter your username below and approve the extension pairing request from the TapTrust Wallet mobile app.
             </p>
 
-            <Container textAlign="center">
+            <Container textAlign="center" style={{paddingTop: 0}}>
                 <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
                 <Divider hidden />
                 <Form.Field>
@@ -126,8 +126,8 @@ class App extends Component {
                         />
                     </div>
                 </Form.Field>
-                <p className="App-bottom">
-                    TapTrust will never request your Wallet password anywhere outside of the TapTrust Wallet mobile app.
+                <p className="App-bottom" style={{fontSize:12, padding:"10px"}}>
+                    TapTrust will never request your password outside of the TapTrust Wallet mobile app.
                 </p>
                 <div>
                     {this.state.errorMessage ? (

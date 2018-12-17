@@ -68,7 +68,7 @@ class Loggedin extends Component {
             Use the TapTrust Wallet mobile app to view account balances and transaction history.
         </p>
         <div className="Appstore-Container">
-          <button class="circular ui button submit wd-200" onClick={this.handleTransaction}>
+          <button class="circular ui button submit wd-200" style={{marginTop:30}} onClick={this.handleTransaction}>
             <label class="label-sub fs-18 tx-center">New Transaction</label>
           </button>
         </div>

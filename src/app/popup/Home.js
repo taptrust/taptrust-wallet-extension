@@ -9,6 +9,8 @@ import { emojiHash } from '../libraries/emoji';
 import { generateToken } from '../utils/tokenGenerator';
 import { APICall } from "./ajax";
 
+const POLL_INTERVAL = 5000;
+
 class Home extends Component {
 
   constructor(props) {
@@ -23,6 +25,7 @@ class Home extends Component {
     this.updateUsernameNetwork = this.updateUsernameNetwork.bind(this);    
   }
 
+
   updateUsernameNetwork() {
     chrome.storage.sync.set({'username': ''});
     chrome.storage.sync.set({'network': ''});
@@ -36,6 +39,7 @@ class Home extends Component {
     };
     const url = "/api/1/pair/request";
     const response = await APICall(url, params);
+    console.log('pair request', response);
     // alert(JSON.stringify(response, null, 4))
     if (response.data.status === 'pending') {
       this.intervalRequest(username);
@@ -50,13 +54,18 @@ class Home extends Component {
     const params = {
       username: username
     };
-    const url = "/api/1/auth/list";
+    const url = "/api/1/account";
     var timerId = setInterval(() => {
       try { APICall(url, params)
         .then(response => {
+          
           if(response.status === 200) {
+            console.log(response.data);
             const data = response.data.profile;
             const balances = response.data.balances;
+            if (!data.username){
+              return alert('invalid data: ' + data);
+            }
             chrome.storage.sync.set({'account': {
               username: data.username,
               address: data.contractAddress,
@@ -64,16 +73,20 @@ class Home extends Component {
               balances: balances
             }});
             clearInterval(timerId);
-            alert(JSON.stringify(response, null, 4))
+            //alert('Home.js ln 67: ' + JSON.stringify(response, null, 4))
             this.setState({ approved: true })
           }
         })
         .catch(e => {
-          alert(e);
+          alert('Unable to find account for user: ' + username);
+          clearInterval(timerId);
+          this.updateUsernameNetwork();
       });} catch(e) {
-        Alert.alert(e);
+        alert('Home.js ln 74: ' + e);
+        clearInterval(timerId);
+        this.updateUsernameNetwork();
       }
-    }, 5000);
+    }, POLL_INTERVAL);
   }
 
   async componentDidMount() {
@@ -129,8 +142,8 @@ class Home extends Component {
           <Divider hidden />
         </header>
 
-        <p className="App-center">To approve this pairing request,
-        sign in as <a className="Username-link" href="http://localhost:7080/" target="_blank">username</a> from the
+        <p className="App-center" style={{fontSize:14, padding: '20px'}}>To approve this pairing request,
+        sign in as <a className="Username-link" href="http://localhost:7080/" target="_blank">{this.state.username}</a> from the
         TapTrust Wallet mobile app and
         verify the emoji sequence shown in
         the app matches the one above.</p>
