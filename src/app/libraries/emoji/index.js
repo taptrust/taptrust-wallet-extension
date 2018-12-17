@@ -3,12 +3,12 @@ const emojis = [128169, 128123, 129302, 127875, 129313, 129413, 128034, 128020, 
 import { sha256, sha224 } from '../js-sha256';
 import { phase } from '../../utils/phase';
 
-const generateSeed = (username, timestamp) => {
-    return phase + username + '-' + timestamp;
+const generateSeed = (username, token) => {
+    return phase + username + '-' + token;
 }
 
-export function emojiHash(username, timestamp) {
-    const seed = generateSeed(username, timestamp);
+export function emojiHash(username, token) {
+    const seed = generateSeed(username, token);
     const hash = sha256(seed);
     const hashBuffer = Buffer.from(hash.slice(2), 'hex');
     const hashArray = Array.prototype.slice.call(hashBuffer, 0, 4);

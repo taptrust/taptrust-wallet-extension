@@ -13,6 +13,7 @@ class App extends Component {
     	super(props);
     	this.state = {
       		loggedInStatus: false,
+					loggingIn: false
     	};
 	}
 
@@ -22,25 +23,50 @@ class App extends Component {
 	}
 	
 	async componentDidMount() {
-		let timeStamp = this.getTimeStamp();
+		
 		chrome.storage.sync.get(['account'], (response) => {
-			response['account'] ? this.setState({loggedInStatus: true}) : this.setState({loggedInStatus: false});
+				if (response['account']){
+					this.setState({loggedInStatus: true});
+				}else{
+					this.setState({loggedInStatus: false});
+					chrome.storage.sync.get(['login'], (response) => {
+						if (response['login']){
+							//alert('login response: ' + JSON.stringify(response['login']));
+							this.setState({loggingIn: true});
+						}else{
+							this.setState({loggingIn: false});
+						}
+					});
+				}
+		});
+		
+		chrome.storage.sync.get(['taptrust-wallet-token'], (response) => {
+			//alert(response['taptrust-wallet-token']);
+			if (!response['taptrust-wallet-token']){
+				let timeStamp = this.getTimeStamp();
+					chrome.storage.sync.set({'taptrust-wallet-token': String(timeStamp)});
+				}
 		});
 
-		chrome.storage.sync.set({'taptrust-wallet-token': timeStamp});
+	
 		
 	}
 
 	render() {
+		let currentScreen = (<Login />);
+		if (this.state.loggedInStatus){
+			currentScreen = (<Loggedin/>);
+		}else{
+			if (this.state.loggingIn){
+				currentScreen = (<Home/>);
+			}
+		}
+		
 		return (
 		  	<div>
 		    	<Routes />
 	    		<div>
-	    		{
-					(this.state.loggedInStatus) ?
-						<Loggedin/>
-					: <Login />
-				}
+	    		{currentScreen}
 	  			</div>
   			</div>
 		);

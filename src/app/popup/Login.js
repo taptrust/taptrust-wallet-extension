@@ -44,7 +44,12 @@ class App extends Component {
 		const url = "/api/1/pair";
 		/*const response = */
         const response = await APICall(url, params);
-		chrome.storage.sync.set({ username: this.state.username });
+		chrome.storage.sync.set({ 
+        login: {
+            username: this.state.username
+        }
+   });
+
 	}
 	
 	onSubmit = async event => {
@@ -55,12 +60,10 @@ class App extends Component {
             this.setState({ loading: true, errorMessage: "" });
             try {
                 await this.sendUsernameToBackground();
-                this.setState({ redirect: true });
+                this.setState({ redirect: true, loading: false });
             } catch (err) {
-                this.setState({ errorMessage: "Username does not exist" }); // Fix error message
+                this.setState({ errorMessage: "Username does not exist", loading: false }); // Fix error message
             }
-            
-            this.setState({ loading: false });
         }
     };
 
@@ -71,9 +74,6 @@ class App extends Component {
             return <Redirect to="/home" />;
         }
 
-        open = () => {
-            alert('Hello')
-        }
         return (
         <div className="App">
             <header>
