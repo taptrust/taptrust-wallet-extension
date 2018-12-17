@@ -30,7 +30,13 @@ module.exports = {
     contentscript: [
       'babel-polyfill',
       `${PAGES_PATH}/scripts/contentscript.js`,
-    ]
+    ],
+	inpage: [
+      `${PAGES_PATH}/scripts/inpage.js`,
+	],
+	'provider-engine': [
+      `${PAGES_PATH}/scripts/provider-engine.js`,
+	]
   },
   output: {
     path: path.resolve('dist/app'),
@@ -41,6 +47,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+		exclude: /(node_modules|bower_compontents)/,
         use: [ 'babel-loader' ]
       },
       {
@@ -83,6 +90,8 @@ module.exports = {
     )
   ],
   node: {
-    fs: 'empty'
+    fs: 'empty',
+	net: 'empty',
+    tls: 'empty'
   }
 }

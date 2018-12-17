@@ -3,7 +3,7 @@
 
   "name": "TapTrust Wallet",
   "description": "Ethereum Browser Extension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "permissions": [
     "activeTab",
     "storage",
@@ -44,6 +44,7 @@
     "ids": ["*"]
   },
   "web_accessible_resources": [
-    "assets/img/icon.png"
+    "assets/img/icon.png",
+	"app/inpage.js"
   ]
 }

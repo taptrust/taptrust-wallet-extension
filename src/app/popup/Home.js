@@ -27,7 +27,7 @@ class Home extends Component {
 
 
   updateUsernameNetwork() {
-    chrome.storage.sync.set({'username': ''});
+    chrome.storage.sync.set({'login': false});
     chrome.storage.sync.set({'network': ''});
     this.setState({redirect: true})
   }
@@ -41,65 +41,123 @@ class Home extends Component {
     const response = await APICall(url, params);
     console.log('pair request', response);
     // alert(JSON.stringify(response, null, 4))
+    if (response.data.status === 'approved') {
+      // this could be because the same device has already been approved? 
+      // depends on server-side policy if approval is needed again after signing out 
+      this.onApproval(username);
+    }
     if (response.data.status === 'pending') {
-      this.intervalRequest(username);
+      this.createIntervalRequest(username, token);
     } else {
-      // this.setState({redirect: true})
+      alert('Unable to find account for user: ' + username);
+      this.updateUsernameNetwork();
     }
 
     return response;
   }
-
-  intervalRequest = async (username) => {
-    const params = {
-      username: username
-    };
-    const url = "/api/1/account";
-    var timerId = setInterval(() => {
-      try { APICall(url, params)
-        .then(response => {
-          
-          if(response.status === 200) {
-            console.log(response.data);
-            const data = response.data.profile;
-            const balances = response.data.balances;
-            if (!data.username){
-              return alert('invalid data: ' + data);
-            }
-            chrome.storage.sync.set({'account': {
-              username: data.username,
-              address: data.contractAddress,
-              ensAddress: data.ensAddress,
-              balances: balances
-            }});
-            clearInterval(timerId);
-            //alert('Home.js ln 67: ' + JSON.stringify(response, null, 4))
-            this.setState({ approved: true })
-          }
-        })
-        .catch(e => {
-          alert('Unable to find account for user: ' + username);
-          clearInterval(timerId);
-          this.updateUsernameNetwork();
-      });} catch(e) {
-        alert('Home.js ln 74: ' + e);
-        clearInterval(timerId);
-        this.updateUsernameNetwork();
+  
+  
+  async intervalRequest (url, params, checkCount, component) {
+    //try { 
+      params['checkCount'] = checkCount;
+      const response = await APICall(url, params);
+      
+      if (response.data.status === 'approved') {
+        console.log('request is approved');
+        clearInterval(component.timerId);
+        component.onApproval(params.username);
+        return;
+      }    
+      if (response.data.status === 'pending') {
+        console.log('request is still pending');
+        return;
       }
-    }, POLL_INTERVAL);
+      if (response.data.status === 'rejected') {
+        alert('Pairing has failed. You can approve pairing requests when signed in as ' + params.username + ' on the TapTrust Wallet mobile app.');
+        clearInterval(component.timerId);
+        component.updateUsernameNetwork();
+      }  
+          
+    
+  /*  } catch(e) {
+      alert('Login error: ' + e);
+      clearInterval(component.timerId);
+      component.updateUsernameNetwork();
+    }*/
   }
 
+  async createIntervalRequest (username, token) {
+    const params = {
+      username: username,
+      token: token
+    };
+    const url = "/api/1/pair/request";
+    let checkCount = 0;
+    let intervalRequest = this.intervalRequest;
+    let component = this; 
+    component.timerId = setInterval(function(){
+      checkCount += 1;
+      intervalRequest(url, params, checkCount, component);
+  }, POLL_INTERVAL);
+  }
+  
+  onApproval(loggedInUsername) {
+
+    try { APICall("/api/1/account", {username: loggedInUsername})
+      .then(response => {
+        
+        if(response.status === 200) {
+          const data = response.data.profile;
+          const balances = response.data.balances;
+          //alert('account: ' + JSON.stringify(response.data.profile));
+          chrome.storage.sync.set({'account': {
+            username: data.username,
+            address: data.contractAddress,
+            ensAddress: data.ensAddress,
+            balances: balances
+          }});
+          this.setState({ approved: true });
+        }else{
+          alert('Error getting account info: Invalid status ' + response.status);
+          this.updateUsernameNetwork();
+        }
+      })
+      .catch(e => {
+        alert('Error getting account info: ' + e);
+        this.updateUsernameNetwork();
+    });} catch(e) {
+      alert('Error retrieving account info: ' + e);
+      this.updateUsernameNetwork();
+    }
+
+  }
+  
   async componentDidMount() {
-    let timeStamp = this.getTimeStamp();
-    chrome.storage.sync.get(['username'], (response) => {
-      const username = response['username'];
-      const emoji = emojiHash(username, timeStamp);
-      const token = generateToken(username, timeStamp);
-      this.setState({
-        username: username,
-        emojiString: emoji
-      });
-      this.pairRequest(username, token);
+      chrome.storage.sync.get(['login'], (response) => {
+
+      const username = response['login']['username'];
+      let emoji = response['login']['emoji'];
+
+      chrome.storage.sync.get(['taptrust-wallet-token'], (response) => {
+          if (!emoji){
+            emoji = emojiHash(username, response['taptrust-wallet-token']);
+            const loginInfo = {
+                username: username,
+                emoji: emoji
+            }
+            //alert('loginInfo: ' + JSON.stringify(loginInfo));
+            chrome.storage.sync.set({ 
+                login: loginInfo
+           });
+         }
+          //alert('setting username: ' + response['login']);
+          this.setState({
+            username: username,
+            emojiString: emoji
+          });
+          this.pairRequest(username, response['taptrust-wallet-token']);        
+  		});
+
     });
 
     chrome.storage.sync.get('network', (response) => {
@@ -107,10 +165,6 @@ class Home extends Component {
     });
   }
 
-  getTimeStamp = () => {
-		let date = Math.floor(new Date() / 1000);
-		return date;
-  }
   
   handleChange = (e, { value }) => {
     this.setState({ network: value }); // Setting previous value fix this

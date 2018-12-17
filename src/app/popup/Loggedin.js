@@ -20,13 +20,15 @@ class Loggedin extends Component {
   }
 
   async componentDidMount() {
-    await chrome.storage.sync.get(['username'], (response) => {
-      const username = response['username'];
+    await chrome.storage.sync.get(['account'], (response) => {
+      const username = response['account']['username'];
       this.setState({
         username: username
       });
     });
-    setTimeout(alert(this.props.location.state.message), 1000)
+    if (this.props.location.state && this.props.location.state.message){
+      setTimeout(alert(this.props.location.state.message), 1000)
+    }
   }
 
   handleTransaction = () => {

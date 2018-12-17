@@ -1,16 +1,33 @@
-/* globals chrome */
-
 var port = chrome.runtime.connect(null, null);
 
-window.addEventListener("message", function(event) {
-  // We only accept messages from ourselves
-  if (event.source != window)
-    return;
+function injectScript(file) {
+    var s = document.createElement('script');
+    s.setAttribute('type', 'text/javascript');
+    s.setAttribute('src', file);
+    document.head.appendChild(s);
+}
 
-  if (event.data.type && (event.data.type == "SENDTRANSACTION")) {
-      chrome.runtime.sendMessage({data: event.data}, (response) => {
-        console.log(response);
-      });
-    /*port.postMessage(event.data.text);*/
-  }
+chrome.storage.sync.get(['account'], function(result) {
+	if(result.account.address != undefined) {
+		var s = document.createElement("script");
+		s.innerHTML = "window.tapTrustUser = '" + result.account.address + "';";
+		document.head.appendChild(s);
+		
+		injectScript(chrome.extension.getURL('app/inpage.js'));
+	}
+});
+
+document.addEventListener("message", function(event) {
+	if (event.detail.type && (event.detail.type == "SENDTRANSACTION")) {
+		console.log(event.detail.type);
+		chrome.runtime.sendMessage({data: event.detail}, (response) => {
+			console.log(JSON.stringify(response));
+			var event = new CustomEvent("message", {detail: {
+					type: "SENDTRANSACTION_RESPONSE",
+					data: response
+				}});
+			document.dispatchEvent(event);
+		});
+	}
+  
 }, false);
