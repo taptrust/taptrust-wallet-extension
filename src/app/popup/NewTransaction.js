@@ -150,9 +150,9 @@ class Newtransaction extends Component {
 
   handleCancel = () => {
     this.setState({
-      redirect: 'login'
+      redirect: 'cancel'
     })
-    chrome.storage.sync.set({'account': ''});
+    //chrome.storage.sync.set({'account': ''});
   }
   
   handleContinue = async () => {
@@ -199,6 +199,10 @@ class Newtransaction extends Component {
           state: {message: 'Please open the TapTrust Wallet app on your mobile device to approve this transaction'}
         }}
       />;
+    }
+    
+    if(redirect === 'cancel') {
+      return <Redirect to='/loggedin' />;
     }
 
     return (

@@ -3,6 +3,11 @@
   src: url(../fonts/hiramarupro-w4-opentype.otf)
 }
 
+html{
+  height: auto;
+}
+
+
 .App {
   text-align: -webkit-center;
   background-image: linear-gradient(#079fef, #0275b3);
@@ -289,4 +294,8 @@ textarea:focus, input:focus{
 .ph-10 {
   padding-left: 10px !important;
   padding-right: 10px !important;
+}
+
+.ui.button label{
+  cursor: pointer;
 }

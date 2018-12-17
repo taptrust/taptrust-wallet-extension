@@ -27,7 +27,7 @@ class App extends Component {
 			response['account'] ? this.setState({loggedInStatus: true}) : this.setState({loggedInStatus: false});
 		});
 
-		chrome.storage.sync.set('taptrust-wallet-token', timeStamp);
+		chrome.storage.sync.set({'taptrust-wallet-token': timeStamp});
 		
 	}
 
