@@ -5,22 +5,12 @@ chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		let username;
 		if (request.data.type == "SENDTRANSACTION") {
-			chrome.storage.sync.get(['username'], function (response) {
-				username = response.username
+			chrome.storage.sync.get(['account'], function (response) {
+				username = response.account.username;
+				console.log(username);
 				const params = {
-	    			username: username,
-	    			pubkey: 0,
-	    			app: request.data.url,
-	    			request: {
-	    				type: "transaction",
-						value: request.data.valueOfEth,
-						recipient: request.data.toAddress,
-						fromAddress: request.data.fromAddress,
-						gas: request.data.gas,
-						gasPrice: request.data.gasPrice,
-						data: request.data.data,
-						nonce: request.data.nonce	    				
-	    			}	    			
+	    			"username": username,
+	    			"params": request.data.params			
 				}
 
 				const url = '/api/1/auth/request';
@@ -44,7 +34,7 @@ chrome.runtime.onMessage.addListener(
 			          		requireInteraction: true
 	        			}
 	        		chrome.notifications.create('transaction', notificationParams);
-  					sendResponse({response: "Sent the transaction data to server"});
+  					sendResponse({response: "Sent the transaction data to server.\n" + JSON.stringify(response)});
 				})
 				.catch(function(error){
 					const notificationParams = {
@@ -63,4 +53,6 @@ chrome.runtime.onMessage.addListener(
 		}
 		return true; // wrt function(request, sender, sendResponse) {
 	}
+	
+	//TODO: Need to add method for polling the request_id status and forwarding status to the page.
 );

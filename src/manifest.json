@@ -44,6 +44,7 @@
     "ids": ["*"]
   },
   "web_accessible_resources": [
-    "assets/img/icon.png"
+    "assets/img/icon.png",
+	"app/inpage.js"
   ]
 }
