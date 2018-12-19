@@ -18,13 +18,16 @@ chrome.storage.sync.get(['account'], function(result) {
 });
 
 document.addEventListener("message", function(event) {
-  if (event.detail.type && (event.detail.type == "SENDTRANSACTION")) {
-	  console.log(event.detail.type);
-      chrome.runtime.sendMessage({data: event.detail}, (response) => {
-        console.log(response);
-      });
-    /*port.postMessage(event.data.text);*/
-  }
-  
+	if (event.detail.type && (event.detail.type == "SENDTRANSACTION")) {
+		console.log(event.detail.type);
+		chrome.runtime.sendMessage({data: event.detail}, (response) => {
+			console.log(JSON.stringify(response));
+			var event = new CustomEvent("message", {detail: {
+					type: "SENDTRANSACTION_RESPONSE",
+					data: response
+				}});
+			document.dispatchEvent(event);
+		});
+	}
   
 }, false);

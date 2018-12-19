@@ -13,6 +13,7 @@ import { APICall } from "./ajax";
 
 function CreateTapTrustProvider(address) {
 	var accounts = [address];
+	var tapTrustResponse = null;
 	
 	function processTransaction(txParams, cb) {
 		var event = new CustomEvent("message", {detail: {
@@ -32,25 +33,31 @@ function CreateTapTrustProvider(address) {
 		awaitResponse(cb);
 	}
 	
-	window.recieveTapTrustResponse = function(response) {
-		window.tapTrustResponse = response;
-	}
+	document.addEventListener("message", function(event) {
+		if (event.detail && (event.detail.type == "SENDTRANSACTION_RESPONSE")) {
+			console.log(event.detail.type);
+			tapTrustResponse = event.detail.data;
+		}
+	}, false);
 	
-	function awaitResponse(request_id, cb) {
+	function awaitResponse(cb) {
 		var pollTimes = 0;
+		var request_id = null;
 		var interval = setInterval(function () {
 			pollTimes++;
-			if(pollTimes > 300)
+			if(tapTrustResponse == null && pollTimes > 300) {
 				cb("transaction request not confirmed within 5 minutes", null);
-			else {
-				if(window.tapTrustResponse != null) {
-					if(window.tapTrustResponse.request_id == request_id) {
-						const authRequest = response;
-						clearInterval(interval);
-						cb(authRequest.error, authRequest.txhash);
-						window.tapTrustResponse = null;
+				clearInterval(interval);
+			}
+			else if(tapTrustResponse != null) {
+					clearInterval(interval);
+					if(tapTrustResponse.success) {
+						cb(null, tapTrustResponse.authRequest.txhash);
+						console.log("Received txhash: " + tapTrustResponse.authRequest.txhash);
 					}
-				}
+					else
+						cb(tapTrustResponse.error, null);
+					tapTrustResponse = null;
 			}
 		}, 1000);
 	}

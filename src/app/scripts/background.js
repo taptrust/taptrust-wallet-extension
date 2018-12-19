@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener(
 		if (request.data.type == "SENDTRANSACTION") {
 			chrome.storage.sync.get(['account'], function (response) {
 				username = response.account.username;
-				console.log(username);
+				console.log("Sending transaction for user: " + username);
 				const params = {
 	    			"username": username,
 	    			"params": request.data.params			
@@ -17,11 +17,14 @@ chrome.runtime.onMessage.addListener(
 
 				APICall(url, params)
 				.then(function(response){
+					console.log("Server response: " + JSON.stringify(response));
 					let message = '';
-					if(response.status == 200) {
+					if(response.data.status == 200 && response.data.authRequest != null) {
 						message = "A transaction has been sent to the TapTrust Wallet Mobile App."
+						awaitResponse(response.data.authRequest.request_id, username, sendResponse);
 					}
 					else {
+						sendResponse({success: false, error: "Transaction could not be sent to the TapTrust Wallet Mobile App."});
 						message = "Transaction could not be sent to the TapTrust Wallet Mobile App."
 					}
 
@@ -34,7 +37,6 @@ chrome.runtime.onMessage.addListener(
 			          		requireInteraction: true
 	        			}
 	        		chrome.notifications.create('transaction', notificationParams);
-  					sendResponse({response: "Sent the transaction data to server.\n" + JSON.stringify(response)});
 				})
 				.catch(function(error){
 					const notificationParams = {
@@ -46,13 +48,49 @@ chrome.runtime.onMessage.addListener(
 			          		requireInteraction: true
         			}
 	        		chrome.notifications.create('transaction', notificationParams);
-  					sendResponse({response: "Failure in sending transaction data to server"});
+  					sendResponse({success: false, error: "Failure in sending transaction data to server"});
 				})
 					
 			})
 		}
-		return true; // wrt function(request, sender, sendResponse) {
+		return true;
 	}
-	
-	//TODO: Need to add method for polling the request_id status and forwarding status to the page.
 );
+
+function awaitResponse(request_id, username, cb) {
+	var pollTimes = 0;
+	var interval = setInterval(function () {
+		pollTimes++;
+		console.log("awaiting confirmation of request id: " + request_id);
+		if(pollTimes > 60) {
+			cb({success: false, error: "transaction request not confirmed within 5 minutes"});
+			clearInterval(interval);
+		}
+		else {
+			const url = '/api/1/auth/get';
+			APICall(url, {"username": username, "request_id": request_id})
+				.then(function(response){
+					console.log("response to get: " + JSON.stringify(response));
+					if(response.data.authRequest.status == "approved" && response.data.authRequest.txhash) {
+						clearInterval(interval);
+						cb({success: true, authRequest: response.data.authRequest});
+					} else if(response.data.authRequest.status == "reject") {
+						clearInterval(interval);
+						cb({success: false, error: "User rejected transaction request"});
+					}
+				})
+				.catch(function(error){
+					const notificationParams = {
+			          		type: "basic",
+			          		iconUrl: chrome.runtime.getURL("../assets/img/icon48.png"),
+			          		title: "TapTrust Wallet",
+			          		message: "Could not fetch request information from API.",
+			          		buttons: [{ title: 'Dismiss' }],
+			          		requireInteraction: true
+        			}
+	        		chrome.notifications.create('transaction', notificationParams);
+					console.log(error);
+				})
+		}
+	}, 5000);
+}
