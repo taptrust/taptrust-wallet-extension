@@ -45,6 +45,7 @@ class Home extends Component {
       // this could be because the same device has already been approved? 
       // depends on server-side policy if approval is needed again after signing out 
       this.onApproval(username);
+      return;
     }
     if (response.data.status === 'pending') {
       this.createIntervalRequest(username, token);

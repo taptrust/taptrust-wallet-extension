@@ -10,8 +10,6 @@ import {
   Divider,
   Container
 } from "semantic-ui-react";
-import appStore from "../../assets/img/AppStore.png";
-import playStore from "../../assets/img/PlayStore.png";
 import { Redirect } from "react-router-dom";
 import { APICall } from "./ajax";
 
@@ -69,6 +67,10 @@ class App extends Component {
 
     render() {
         const { redirect } = this.state;
+        
+        const appStore = chrome.runtime.getURL('/app/AppStore.png');
+        const playStore = chrome.runtime.getURL('/app/PlayStore.png');
+
 
         if (redirect) {
             return <Redirect to="/home" />;
