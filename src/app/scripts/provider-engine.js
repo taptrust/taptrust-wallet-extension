@@ -11,10 +11,10 @@ const NonceSubprovider = require('web3-provider-engine/subproviders/nonce-tracke
 const RpcSubprovider = require('web3-provider-engine/subproviders/rpc.js')
 import { APICall } from "./ajax";
 
-function CreateTapTrustProvider(address) {
-	var accounts = [address];
-	var tapTrustResponse = null;
-	
+var tapTrustResponse = null;
+var isEnabled = true;
+
+function CreateTapTrustProvider() {
 	function processTransaction(txParams, cb) {
 		var event = new CustomEvent("message", {detail: {
 				type: "SENDTRANSACTION",
@@ -34,9 +34,15 @@ function CreateTapTrustProvider(address) {
 	}
 	
 	document.addEventListener("message", function(event) {
-		if (event.detail && (event.detail.type == "SENDTRANSACTION_RESPONSE")) {
-			console.log(event.detail.type);
-			tapTrustResponse = event.detail.data;
+		console.log("received message" + JSON.stringify(event));
+		if(event.detail) {
+			if (event.detail.type == "SENDTRANSACTION_RESPONSE") {
+				console.log(event.detail.type);
+				tapTrustResponse = event.detail.data;
+			}else if(event.detail.type == "TAPTRUST_USER_UPDATE") {
+				console.log("setting user account info: " + event.detail.address);
+				web3.eth.accounts[0] = event.detail.address;
+			}
 		}
 	}, false);
 	
@@ -75,7 +81,18 @@ function CreateTapTrustProvider(address) {
 	}
 	
 	function getAccounts(cb) {
-		cb(null,accounts);
+		if(isEnabled) {
+			if(!web3.eth.accounts[0]) {
+				console.log("GETACCOUNT_REQUESTED");
+				var event = new CustomEvent("message", {detail: { type: "GETACCOUNT_REQUESTED" }});
+				document.dispatchEvent(event);
+			}
+			console.log("getAccounts(): " + web3.eth.accounts[0]);
+			cb(null,[web3.eth.accounts[0]]);
+		} else {
+			engine.enable();
+			return [];
+		}
 	}
 	
 	var options = {
@@ -88,8 +105,6 @@ function CreateTapTrustProvider(address) {
 	
 	var engine = new ProviderEngine();
 	var web3 = new Web3(engine);
-	
-	web3.eth.accounts[0] = address;
 
 	// static results
 	engine.addProvider(new FixtureSubprovider({
@@ -130,6 +145,20 @@ function CreateTapTrustProvider(address) {
 	engine.start();
 	
 	window.web3 = web3;
+	//window.ethereum = engine;
+	
+	/*// accommodate MetaMask's new privacy mode style login
+	engine.enable = function ({ force } = {}) {
+		return new Promise((resolve, reject) => {
+			if(!web3.eth.accounts[0])
+				alert("This dApp is requesting connection to your wallet, please login to TapTrust to continue.");
+			else if(confirm("Allow this dApp to connect to TapTrust wallet?")){
+				isEnabled = true;
+				resolve(web3.eth.accounts[0]);			
+			} else
+				reject();
+		})
+	}*/
 	
 	return engine;
 }

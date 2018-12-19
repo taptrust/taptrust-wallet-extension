@@ -116,6 +116,7 @@ class Home extends Component {
             ensAddress: data.ensAddress,
             balances: balances
           }});
+		  chrome.runtime.sendMessage({data: {type: "TAPTRUST_USER_UPDATE", address: data.contractAddress}}, function(){});
           this.setState({ approved: true });
         }else{
           alert('Error getting account info: Invalid status ' + response.status);
