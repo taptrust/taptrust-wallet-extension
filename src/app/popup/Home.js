@@ -21,6 +21,7 @@ class Home extends Component {
         redirect: false,
         emojiString: '',
         approved: false,
+        isLoading: true
     };
     this.updateUsernameNetwork = this.updateUsernameNetwork.bind(this);    
   }
@@ -45,6 +46,7 @@ class Home extends Component {
       // this could be because the same device has already been approved? 
       // depends on server-side policy if approval is needed again after signing out 
       this.onApproval(username);
+      return;
     }
     if (response.data.status === 'pending') {
       this.createIntervalRequest(username, token);
@@ -99,6 +101,7 @@ class Home extends Component {
       checkCount += 1;
       intervalRequest(url, params, checkCount, component);
   }, POLL_INTERVAL);
+  this.setState({isLoading: false})
   }
   
   onApproval(loggedInUsername) {
@@ -116,6 +119,7 @@ class Home extends Component {
             ensAddress: data.ensAddress,
             balances: balances
           }});
+		  chrome.runtime.sendMessage({data: {type: "TAPTRUST_USER_UPDATE", address: data.contractAddress}}, function(){});
           this.setState({ approved: true });
         }else{
           alert('Error getting account info: Invalid status ' + response.status);
@@ -172,7 +176,8 @@ class Home extends Component {
   }
 
   render() {
-    const { redirect, approved } = this.state;
+    const { redirect, approved, isLoading } = this.state;
+
 
     if (redirect) {
       return <Redirect to='/login' />;
@@ -181,6 +186,18 @@ class Home extends Component {
     if (approved) {
       return <Redirect to='/loggedin' />;
     }
+    
+    if (isLoading){
+      return (  <div className="App">
+          <header>
+            <Divider hidden />
+            <p className="App-center">
+            Loading...
+            </p>
+          </header>
+        </div>);
+    }
+    
     return (
       <div className="App">
         <header>

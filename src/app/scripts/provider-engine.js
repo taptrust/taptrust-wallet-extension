@@ -5,16 +5,16 @@ const ProviderEngine = require('web3-provider-engine')
 const CacheSubprovider = require('web3-provider-engine/subproviders/cache.js')
 const FixtureSubprovider = require('web3-provider-engine/subproviders/fixture.js')
 const FilterSubprovider = require('web3-provider-engine/subproviders/filters.js')
-const VmSubprovider = require('web3-provider-engine/subproviders/vm.js')
 const HookedWalletSubprovider = require('web3-provider-engine/subproviders/hooked-wallet.js')
 const NonceSubprovider = require('web3-provider-engine/subproviders/nonce-tracker.js')
 const RpcSubprovider = require('web3-provider-engine/subproviders/rpc.js')
 import { APICall } from "./ajax";
 
-function CreateTapTrustProvider(address) {
-	var accounts = [address];
-	var tapTrustResponse = null;
-	
+var tapTrustResponse = null;
+var isEnabled = true;
+var account = null;
+
+function CreateTapTrustProvider() {
 	function processTransaction(txParams, cb) {
 		var event = new CustomEvent("message", {detail: {
 				type: "SENDTRANSACTION",
@@ -34,9 +34,16 @@ function CreateTapTrustProvider(address) {
 	}
 	
 	document.addEventListener("message", function(event) {
-		if (event.detail && (event.detail.type == "SENDTRANSACTION_RESPONSE")) {
-			console.log(event.detail.type);
-			tapTrustResponse = event.detail.data;
+		console.log("received message" + JSON.stringify(event));
+		if(event.detail) {
+			if (event.detail.type == "SENDTRANSACTION_RESPONSE") {
+				console.log(event.detail.type);
+				tapTrustResponse = event.detail.data;
+			}else if(event.detail.type == "TAPTRUST_USER_UPDATE") {
+				console.log("setting user account info: " + event.detail.address);
+				window.tapTrustAddress = event.detail.address;
+				web3.eth.defaultAccount = event.detail.address;
+			}
 		}
 	}, false);
 	
@@ -75,7 +82,12 @@ function CreateTapTrustProvider(address) {
 	}
 	
 	function getAccounts(cb) {
-		cb(null,accounts);
+		if(isEnabled) {
+			cb(null, [web3.eth.defaultAccount]);
+		} else {
+			engine.enable();
+			cb(null, []);
+		}
 	}
 	
 	var options = {
@@ -88,8 +100,6 @@ function CreateTapTrustProvider(address) {
 	
 	var engine = new ProviderEngine();
 	var web3 = new Web3(engine);
-	
-	web3.eth.accounts[0] = address;
 
 	// static results
 	engine.addProvider(new FixtureSubprovider({
@@ -109,9 +119,6 @@ function CreateTapTrustProvider(address) {
 	// pending nonce
 	engine.addProvider(new NonceSubprovider())
 
-	// vm
-	engine.addProvider(new VmSubprovider())
-
 	// id mgmt
 	engine.addProvider(new HookedWalletSubprovider(options))
 
@@ -125,11 +132,44 @@ function CreateTapTrustProvider(address) {
 	  // report connectivity errors
 	  console.error(err.stack)
 	})
+	
+	engine.isConnected = function() {
+		return true;
+	}
 
 	// start polling for blocks
 	engine.start();
 	
+	web3.setProvider = function () {
+		console.debug('TAPTRUST: cannot change provider')
+	}
+	
+	console.log("taptrust address: " + window.tapTrustAddress);
+
+	web3.eth.defaultAccount = window.tapTrustAddress;
+	
+	web3.version.getNetwork = function(cb) {
+		cb(null, 3)
+	}
+	
+	web3.eth.getCoinbase = function(cb) {
+		return cb(null, address)
+	}
+	
 	window.web3 = web3;
+	window.ethereum = engine;
+	
+	// accommodate MetaMask's new privacy mode style login
+	engine.enable = function ({ force } = {}) {
+		return new Promise((resolve, reject) => {
+			if(!web3.eth.defaultAccount)
+				alert("This dApp is requesting connection to your wallet, please login to TapTrust to continue.");
+			else if(confirm("Allow this dApp to connect to TapTrust wallet?")){
+				resolve([web3.eth.defaultAccount]);			
+			} else
+				reject();
+		})
+	}
 	
 	return engine;
 }

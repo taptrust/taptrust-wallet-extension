@@ -1,6 +1,19 @@
 /* globals chrome */
 import { APICall } from '../popup/ajax';
 
+window.accountAddress = null;
+
+chrome.storage.sync.get(['account'], function (response) {
+	window.accountAddress = response.account.address;
+});
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) { 
+		if (request.data.type == "GET_ACCOUNTADDRESS") {
+			sendResponse({address: window.accountAddress});
+		}
+	});
+
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		let username;
@@ -63,8 +76,8 @@ function awaitResponse(request_id, username, cb) {
 		pollTimes++;
 		console.log("awaiting confirmation of request id: " + request_id);
 		if(pollTimes > 60) {
-			cb({success: false, error: "transaction request not confirmed within 5 minutes"});
 			clearInterval(interval);
+			cb({success: false, error: "transaction request not confirmed within 5 minutes"});
 		}
 		else {
 			const url = '/api/1/auth/get';

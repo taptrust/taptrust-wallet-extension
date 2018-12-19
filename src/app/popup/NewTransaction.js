@@ -9,7 +9,6 @@ import Modal from 'react-modal';
 import { emojiHash } from '../libraries/emoji';
 import { generateToken } from '../utils/tokenGenerator';
 import { APICall } from "./ajax";
-import editIcon from "../../assets/img/edit.png";
 
 const customStyles = {
   content : {
@@ -175,6 +174,8 @@ class Newtransaction extends Component {
       this.setState({
         redirect: 'loggedin'
       })
+    }else{
+      alert(response.data.error || 'Unexpected server error');
     }
   }
 
@@ -191,6 +192,8 @@ class Newtransaction extends Component {
   render() {
     const { ensAddress, address, redirect } = this.state;
 
+    const editIcon = chrome.runtime.getURL('/app/edit.png');
+    
     if(redirect === 'login') {
       return <Redirect to='/login' />;
     }
@@ -223,6 +226,7 @@ class Newtransaction extends Component {
               type='text'
               class="address"
               value={this.state.inputAddress}
+              autoFocus={true}
               onChange={event =>
                 this.setState({ inputAddress: event.target.value })
               }
