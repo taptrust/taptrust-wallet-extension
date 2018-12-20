@@ -165,7 +165,7 @@ function CreateTapTrustProvider() {
 			if(!web3.eth.defaultAccount)
 				alert("This dApp is requesting connection to your wallet, please login to TapTrust to continue.");
 			else if(confirm("Allow this dApp to connect to TapTrust wallet?")){
-				resolve(web3.eth.defaultAccount);			
+				resolve([web3.eth.defaultAccount]);			
 			} else
 				reject();
 		})
