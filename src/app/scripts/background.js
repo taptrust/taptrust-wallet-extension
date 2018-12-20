@@ -1,9 +1,26 @@
 /* globals chrome */
 import { APICall } from '../popup/ajax';
 
+window.accountAddress = null;
+
+chrome.storage.sync.get(['account'], function (response) {
+	window.accountAddress = response.account.address;
+});
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) { 
+		if (request.data.type == "GET_ACCOUNTADDRESS") {
+			sendResponse({address: window.accountAddress});
+		}
+	});
+
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		let username;
+		if (request.data.type == "TAPTRUST_USER_UPDATE") {
+			window.accountAddress = request.data.address;
+			return;
+		}
 		if (request.data.type == "SENDTRANSACTION") {
 			chrome.storage.sync.get(['account'], function (response) {
 				username = response.account.username;

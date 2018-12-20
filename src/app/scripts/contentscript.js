@@ -1,9 +1,27 @@
 var port = chrome.runtime.connect(null, null);
 
+var address;
+
+chrome.runtime.sendMessage({data: {type: "GET_ACCOUNTADDRESS"}}, function(response) {
+	console.log("GET_ACCOUNTADDRESS response: " + response.address);
+	if(response && response.address)
+		address = response.address;
+	else
+		address = "none";
+	
+	injectScript(chrome.extension.getURL('app/inpage.js'));
+});
+
 function injectScript(file) {
 	try {
 		const container = document.head || document.documentElement
-		const scriptTag = document.createElement('script')
+		var scriptTag = document.createElement('script')
+		scriptTag.setAttribute('async', false)
+		console.log("injecting address: " + address);
+		scriptTag.textContent = "window.tapTrustAddress = '" + address + "'; console.log('injected address: ' + window.tapTrustAddress);";
+		container.insertBefore(scriptTag, container.children[0]);
+		
+		scriptTag = document.createElement('script')
 		scriptTag.setAttribute('async', false)
 		scriptTag.setAttribute('src', file)
 		container.insertBefore(scriptTag, container.children[0])
@@ -12,8 +30,6 @@ function injectScript(file) {
 		console.error('TapTrust script injection failed', e)
 	}
 }
-
-injectScript(chrome.extension.getURL('app/inpage.js'));
 
 document.addEventListener("message", function(event) {
 	if (event.detail.type) {
@@ -27,17 +43,7 @@ document.addEventListener("message", function(event) {
 					}});
 				document.dispatchEvent(event);
 			});
-		} else if(event.detail.type == "GETACCOUNT_REQUESTED") {
-			chrome.storage.sync.get(['account'], function(result) {
-				if(result.account.address != undefined) {
-					console.log("acquired user account info: " + result.account.address);
-					var event = new CustomEvent("message", {detail: { type: "TAPTRUST_USER_UPDATE", address: result.account.address }});
-					document.dispatchEvent(event);
-				} else {
-					alert("This dApp is requesting connection to your wallet, please login to TapTrust to continue.");
-				}
-			});
-		}
+		} 
 	}
 }, false);
 
@@ -49,3 +55,5 @@ chrome.runtime.onMessage.addListener(
 			document.dispatchEvent(event);
 		}
 	});
+	
+console.log("CONTENT SCRIPT COMPLETED");

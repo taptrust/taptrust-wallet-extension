@@ -24,7 +24,7 @@
       ],
       "js": ["app/contentscript.js"],
       "run_at": "document_start",
-      "all_frames": true
+      "all_frames": false
     }
   ],
 
@@ -45,7 +45,7 @@
   },
   "web_accessible_resources": [
     "assets/img/icon.png",
-	"app/inpage.js"
+	"app/inpage.js",
     "assets/img/AppStore.png",
     "assets/img/PlayStore.png",
     "assets/img/edit.png"
