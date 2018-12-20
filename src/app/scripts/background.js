@@ -17,10 +17,6 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		let username;
-		if (request.data.type == "TAPTRUST_USER_UPDATE") {
-			window.accountAddress = request.data.address;
-			return;
-		}
 		if (request.data.type == "SENDTRANSACTION") {
 			chrome.storage.sync.get(['account'], function (response) {
 				username = response.account.username;
@@ -80,8 +76,8 @@ function awaitResponse(request_id, username, cb) {
 		pollTimes++;
 		console.log("awaiting confirmation of request id: " + request_id);
 		if(pollTimes > 60) {
-			cb({success: false, error: "transaction request not confirmed within 5 minutes"});
 			clearInterval(interval);
+			cb({success: false, error: "transaction request not confirmed within 5 minutes"});
 		}
 		else {
 			const url = '/api/1/auth/get';

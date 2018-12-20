@@ -132,6 +132,10 @@ function CreateTapTrustProvider() {
 	  // report connectivity errors
 	  console.error(err.stack)
 	})
+	
+	engine.isConnected = function() {
+		return true;
+	}
 
 	// start polling for blocks
 	engine.start();
