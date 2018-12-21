@@ -4,14 +4,17 @@ import { APICall } from '../popup/ajax';
 window.accountAddress = null;
 
 chrome.storage.sync.get(['account'], function (response) {
-	if(response.account)
-		window.accountAddress = response.account.address;
+	window.accountAddress = response.account.address;
 });
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) { 
 		if (request.data.type == "GET_ACCOUNTADDRESS") {
 			sendResponse({address: window.accountAddress});
+		}
+		else if (request.data.type == "TAPTRUST_USER_UPDATE") {
+			window.accountAddress = request.data.address;
+			sendResponse({});
 		}
 	});
 
