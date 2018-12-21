@@ -4,7 +4,8 @@ import { APICall } from '../popup/ajax';
 window.accountAddress = null;
 
 chrome.storage.sync.get(['account'], function (response) {
-	window.accountAddress = response.account.address;
+	if(response.account)
+		window.accountAddress = response.account.address;
 });
 
 chrome.runtime.onMessage.addListener(
@@ -41,7 +42,7 @@ chrome.runtime.onMessage.addListener(
 						awaitResponse(response.data.authRequest.request_id, username, sendResponse);
 					}
 					else {
-						sendResponse({success: false, error: "Transaction could not be sent to the TapTrust Wallet Mobile App."});
+						sendResponse({success: false, error: "Transaction could not be sent to the TapTrust Wallet Mobile App: " + response.data.error});
 						message = "Transaction could not be sent to the TapTrust Wallet Mobile App."
 					}
 

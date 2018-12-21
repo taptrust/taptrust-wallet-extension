@@ -20,7 +20,7 @@ function CreateTapTrustProvider() {
 				type: "SENDTRANSACTION",
 				params:	{
 					type: "appTransaction",
-					value: txParams.value,
+					value: txParams.value ? txParams.value : 0x0,
 					to: txParams.to,
 					data: txParams.data,
 					app: window.location.hostname
@@ -54,16 +54,20 @@ function CreateTapTrustProvider() {
 			pollTimes++;
 			if(tapTrustResponse == null && pollTimes > 300) {
 				cb("transaction request not confirmed within 5 minutes", null);
+				alert("Cannot confirm transaction execution, transaction request not approved within 5 minutes");
 				clearInterval(interval);
 			}
 			else if(tapTrustResponse != null) {
 					clearInterval(interval);
 					if(tapTrustResponse.success) {
 						cb(null, tapTrustResponse.authRequest.txhash);
+						alert("Transaction approved and submitted. TXHash: " + tapTrustResponse.authRequest.txhash);
 						console.log("Received txhash: " + tapTrustResponse.authRequest.txhash);
 					}
-					else
+					else {
+						alert(tapTrustResponse.error);
 						cb(tapTrustResponse.error, null);
+					}
 					tapTrustResponse = null;
 			}
 		}, 1000);
@@ -136,6 +140,8 @@ function CreateTapTrustProvider() {
 	engine.isConnected = function() {
 		return true;
 	}
+	
+	engine.isMetaMask = true;
 
 	// start polling for blocks
 	engine.start();
@@ -154,6 +160,17 @@ function CreateTapTrustProvider() {
 	
 	web3.eth.getCoinbase = function(cb) {
 		return cb(null, address)
+	}
+	
+	engine.send = function(payload){
+		if(payload.method == "eth_accounts")
+			return {jsonrpc: '2.0', id: 0, result: [web3.eth.defaultAccount]};
+		else if(payload.method == "net_version")
+			return {jsonrpc: '2.0', id: 0, result: 3};
+		else if(payload.method == "eth_coinbase")
+			return {jsonrpc: '2.0', id: 0, result: web3.eth.defaultAccount};
+		console.log(payload.method);
+		throw new Error('Web3ProviderEngine does not support synchronous requests.')
 	}
 	
 	window.web3 = web3;

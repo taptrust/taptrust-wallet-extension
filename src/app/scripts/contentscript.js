@@ -20,7 +20,7 @@ function injectScript(file) {
 		console.log("injecting address: " + address);
 		scriptTag.textContent = "window.tapTrustAddress = '" + address + "'; console.log('injected address: ' + window.tapTrustAddress);";
 		container.insertBefore(scriptTag, container.children[0]);
-		
+		container.removeChild(scriptTag)
 		scriptTag = document.createElement('script')
 		scriptTag.setAttribute('async', false)
 		scriptTag.setAttribute('src', file)
