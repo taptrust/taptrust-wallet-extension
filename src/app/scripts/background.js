@@ -4,7 +4,9 @@ import { APICall } from '../popup/ajax';
 window.accountAddress = null;
 
 chrome.storage.sync.get(['account'], function (response) {
-	window.accountAddress = response.account.address;
+	if (response.account){
+		window.accountAddress = response.account.address;
+	}
 });
 
 chrome.runtime.onMessage.addListener(
