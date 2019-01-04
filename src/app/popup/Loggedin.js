@@ -66,12 +66,15 @@ class Loggedin extends Component {
           <p className="Paring-Username">{this.state.username}.taptrust.eth</p>
           <Divider hidden />
         </header>
-        <p className="App-bottom">
-            Use the TapTrust Wallet mobile app to view account balances and transaction history.
+        <p className="App-bottom" style={{marginLeft: 30, marginRight: 30}}>
+            Use the TapTrust Wallet app for iOS or Android to view your token balances and recent activity. The app is also used to confirm all account transactions.
+        </p>
+        <p className="App-bottom" style={{marginLeft: 30, marginRight: 30}}>
+            You can create new custom transactions with the button below or by using any supported web3 app from your browser.
         </p>
         <div className="Appstore-Container">
           <button class="circular ui button submit wd-200" style={{marginTop:30}} onClick={this.handleTransaction}>
-            <label class="label-sub fs-18 tx-center">New Transaction</label>
+            <label class="label-sub fs-18 tx-center">Create Transaction</label>
           </button>
         </div>
         <div className="SignContainer">

@@ -30,6 +30,7 @@ class Newtransaction extends Component {
     super(props);
     this.state = {
       inputAddress: '',
+      savedInputAddress: '',
       username: '',
       redirect: '',
       isModalOpen: false,
@@ -64,13 +65,18 @@ class Newtransaction extends Component {
     })
   }
   
-  handleAddress = () => {
+  handleEditAddress = () => {
     this.setState({
+      savedInputAddress: this.state.inputAddress,
       isModalOpen: true
     })
   }
 
   handleSubmit = () => {
+    
+    if (!this.state.inputAddress){
+      return this.handleEscape();
+    }
     this.setState({
       isModalOpen: false,
       method: false,
@@ -89,10 +95,12 @@ class Newtransaction extends Component {
   }
 
   handleEscape = () => {
+    
     this.setState({
+      inputAddress: this.state.savedInputAddress,
       isModalOpen: false,
-      method: false,
-      isRecipientAddressShown: true,
+      method: this.state.recipientAddress === '',
+      isRecipientAddressShown: this.state.recipientAddress != '',
     })
   }
 
@@ -119,7 +127,7 @@ class Newtransaction extends Component {
     if(!usd) {
       return 0;
     }
-    return (value/100).toFixed(4);
+    return (value/150).toFixed(4);
   }
 
   ethToUSD = (eth) => {
@@ -127,7 +135,7 @@ class Newtransaction extends Component {
     if(!eth) {
       return 0;
     }
-    return (value*100).toFixed(3);
+    return (value*150).toFixed(2);
   }
 
   usdAmountChange = (event) => {
@@ -165,7 +173,7 @@ class Newtransaction extends Component {
       params: {
         type: "customTransaction",
         value: parseInt(parseFloat(this.state.ethAmount) * 1000000000000000000),
-        to: this.state.recipientAddress
+        to: this.state.inputAddress
       }
     };
     const url = "/api/1/auth/request";
@@ -259,20 +267,20 @@ class Newtransaction extends Component {
           <div className="top">
             <div class="address-area">
               <label class="label-address">{this.state.recipientAddress}</label>
-              <button class="ui icon button smallButton edit-button" onClick={this.handleEdit}>
+              <button class="ui icon button smallButton edit-button" onClick={this.handleEditAddress}>
                 <img src={editIcon} className="edit-icon" alt="logo" />
               </button>
             </div>
           </div>}
         {this.state.method &&
           <div className="top">
-            <button class="circular ui button smallButton" onClick={this.handleAddress}>
-              <p className="App-bottom">ETH Address</p>
+            <button class="circular ui button smallButton" onClick={this.handleEditAddress}>
+              <p className="App-bottom">Add Ethereum Address</p>
             </button>
-            <button class="circular ui button smallButton">
+            <button class="circular ui button smallButton" style={{display:'none'}}>
               <p className="App-bottom">Scan QR</p>
             </button>
-            <button class="circular ui button smallButton">
+            <button class="circular ui button smallButton" style={{display:'none'}}>
               <p className="App-bottom">Recent</p>
             </button>
           </div>
@@ -307,12 +315,12 @@ class Newtransaction extends Component {
               </div>
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12" style={{display:'none'}}>
             <div class="ml-20">
               <label class="label-sub b-b" onClick={this.handleMax}>Max</label>
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12"  style={{display:'none'}}>
             <div class="mr-20 pull-right">
               <label class="label-sub b-b">Advanced Options</label>
             </div>
